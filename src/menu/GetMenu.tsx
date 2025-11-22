@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import type { MenuProps } from "antd";
+import { MenuIcon } from "./MenuIcon";
 import type { MenuItem } from "./MenuConfig";
-import { MenuIcon } from "./menuIcon";
 
 export const GetMenu = (items: MenuItem[]): MenuProps["items"] => {
   return items.map((item) => ({

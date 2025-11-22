@@ -1,0 +1,18 @@
+{
+    "user": {
+        "id": 123,
+        "email": "dev@example.com"
+    },
+    "roles": [
+        "manager"
+    ],
+    "permissions": [
+        "menu.users",
+        "menu.reports",
+        "user.read",
+        "user.create",
+        "user.update",
+        "report.read",
+        "report.export"
+    ]
+}

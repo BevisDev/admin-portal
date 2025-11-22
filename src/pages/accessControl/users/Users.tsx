@@ -1,5 +1,6 @@
 import { Button, Table } from "antd";
 import { useState } from "react";
+import { useAppStore } from "../../../store/AppStore";
 
 interface User {
   id: number;
@@ -8,6 +9,8 @@ interface User {
 }
 
 export default function Users() {
+  const appConfig = useAppStore((s) => s.appConfig);
+
   const [data] = useState<User[]>([
     { id: 1, name: "Bevis", age: 25 },
     { id: 2, name: "Alice", age: 30 },
@@ -25,6 +28,7 @@ export default function Users() {
 
   return (
     <>
+      <span>Version: {appConfig?.version}</span>
       <h1 style={{ marginBottom: 20 }}>Users</h1>
       <Table<User> rowKey="id" columns={columns} dataSource={data} />
     </>

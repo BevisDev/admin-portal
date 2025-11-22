@@ -3,6 +3,7 @@ export interface MenuItem {
   label: string;
   icon?: string;
   children?: MenuItem[];
+  permissions?: string;
 }
 
 export const MenuConfig: MenuItem[] = [
@@ -11,7 +12,6 @@ export const MenuConfig: MenuItem[] = [
     label: "Dashboard",
     icon: "dashboard",
   },
-
   {
     key: "access-control",
     icon: "accessControl",
@@ -21,6 +21,7 @@ export const MenuConfig: MenuItem[] = [
         key: "/users",
         icon: "users",
         label: "Users",
+        permissions: "user.view",
       },
       {
         key: "/roles",

@@ -2,8 +2,8 @@ import { Image, Layout, Menu } from "antd";
 import React from "react";
 import logo from "@/assets/logo/cat-logo.png";
 import { useLocation } from "react-router-dom";
-import { GetMenu } from "../../config/menu/menu";
-import { MenuConfig } from "../../config/menu/MenuConfig";
+import { GetMenu } from "../../menu/GetMenu.tsx";
+import { MenuConfig } from "../../menu/MenuConfig.ts";
 import { useTheme } from "../../hooks/useTheme.ts";
 import { darkColors, lightColors } from "../../types/theme.ts";
 
