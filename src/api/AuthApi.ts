@@ -1,15 +1,7 @@
-export interface MeResponse {
-  user: {
-    id: number;
-    email: string;
-    name?: string;
-  } | null;
-  roles: string[];
-  permissions: string[];
-}
+import type { MeResponse } from "../auth/auth";
 
 export const getMe = async (): Promise<MeResponse> => {
-  const res = await fetch("/auth/me");
+  const res = await fetch("/mock/get-me.json");
   if (!res.ok) {
     throw new Error("Failed to fetch getMe");
   }
