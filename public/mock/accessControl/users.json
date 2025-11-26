@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "fullName": "Bevis",
+      "email": "bevis@example.com",
+      "phone": "0901111111",
+      "age": 25,
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "fullName": "Alice",
+      "email": "alice@example.com",
+      "phone": "0931234567",
+      "age": 30,
+      "status": "inactive"
+    },
+    {
+      "id": 3,
+      "fullName": "Hoà đẹp trai",
+      "email": "hoa@example.com",
+      "phone": "0918877665",
+      "age": 22,
+      "status": "active"
+    }
+  ]
+}

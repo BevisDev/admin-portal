@@ -1,9 +1,15 @@
-import type { MeResponse } from "../auth/auth";
+import { useQuery } from "@tanstack/react-query";
+import type { Me } from "../types/me";
+import { GETQuery } from "@/hooks/useFetchQuery";
+import { API } from "./endpoint";
 
-export const getMe = async (): Promise<MeResponse> => {
-  const res = await fetch("/mock/get-me.json");
-  if (!res.ok) {
-    throw new Error("Failed to fetch getMe");
-  }
-  return res.json();
+export const GetMe = () => {
+  return useQuery({
+    queryKey: ["me"],
+    queryFn: () =>
+      GETQuery<null, { data: Me }>({
+        url: API.me,
+      }),
+    select: (res) => res.data,
+  });
 };

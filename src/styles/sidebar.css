@@ -1,0 +1,45 @@
+.glow-menu .glow-menu-light .ant-menu-item {
+  border-radius: 10px !important;
+  margin: 4px 8px !important;
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+.glow-menu .ant-menu-item:hover {
+  background: rgba(0, 185, 255, 0.18) !important;
+}
+
+.glow-menu .ant-menu-item-selected {
+  background: rgba(0, 185, 255, 0.32) !important;
+  border-radius: 12px !important;
+
+  /* Hiệu ứng glow */
+  box-shadow: 0 0 12px rgba(0, 185, 255, 0.55), 0 0 20px rgba(0, 185, 255, 0.25),
+    inset 0 0 6px rgba(0, 185, 255, 0.35) !important;
+
+  color: #dff9ff !important;
+  font-weight: 500 !important;
+}
+
+/* Xóa border left xanh mặc định của Antd */
+.glow-menu .glow-menu-light .ant-menu-item-selected::after {
+  display: none !important;
+}
+
+/* ==== LIGHT THEME MENU STYLE ==== */
+.glow-menu-light .ant-menu-item-selected {
+  background: rgba(140, 90, 255, 0.14) !important;
+  border-radius: 10px !important;
+
+  /* Không glow, chỉ soft shadow */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04),
+    inset 0 0 0 1px rgba(140, 90, 255, 0.25) !important;
+
+  color: #6d40ff !important;
+  font-weight: 500 !important;
+}
+
+/* Hover – nhẹ nhàng */
+.glow-menu-light .ant-menu-item:hover {
+  background: rgba(140, 90, 255, 0.1) !important;
+}

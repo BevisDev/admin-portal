@@ -2,28 +2,30 @@ export type ThemeMode = "light" | "dark";
 
 export const lightColors = {
   primary: "#9c6bff",
-  background: "#f9f8ff",
-  sidebarBg: "#f3f1fa",
-  sidebarBorder: "#e4e1f0",
+  background: "#faf7ff",
+  sidebarBg: "#f3eeff",
+  sidebarBorder: "#e1daf6",
   text: "#2e2a3a",
   textSecondary: "#6b657b",
-  menuHover: "#ede7ff",
+  menuHover: "#ebe5ff",
   menuActive: "#9c6bff",
   cardBg: "#ffffff",
-  border: "#dcd6eb",
+  border: "#ddd4f3",
+  headerBg: "#ffffff",
 };
 
 export const darkColors = {
   primary: "#b498ff",
-  background: "#1c1a22",
-  sidebarBg: "#1f1d27",
-  sidebarBorder: "#2d2a36",
-  text: "#e9e6f8",
-  textSecondary: "#a8a1c7",
-  menuHover: "#2a2535",
+  background: "#17141f",
+  sidebarBg: "#1d1a27",
+  sidebarBorder: "#2a2636",
+  text: "#eae6f8",
+  textSecondary: "#b7afd3",
+  menuHover: "#262032",
   menuActive: "#9c6bff",
-  cardBg: "#26232f",
-  border: "#3a3548",
+  cardBg: "#221f2c",
+  border: "#383245",
+  headerBg: "#201c2b",
 };
 
 export const themeTokens = {

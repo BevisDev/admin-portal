@@ -3,7 +3,7 @@ import { ThemeContext, type ThemeContextType } from "../hooks/useTheme.ts";
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [themeMode, setThemeMode] =
-    useState<ThemeContextType["themeMode"]>("light");
+    useState<ThemeContextType["themeMode"]>("dark");
 
   return (
     <ThemeContext.Provider value={{ themeMode, setThemeMode }}>

@@ -1,18 +1,21 @@
 {
+  "data": {
     "user": {
-        "id": 123,
-        "email": "dev@example.com"
+      "id": 123,
+      "fullName": "truongthanh binh",
+      "email": "dev@example.com"
     },
-    "roles": [
-        "manager"
-    ],
+    "isSuperAdmin": true,
+    "isAuthenticated": true,
+    "roles": ["admin"],
     "permissions": [
-        "menu.users",
-        "menu.reports",
-        "user.read",
-        "user.create",
-        "user.update",
-        "report.read",
-        "report.export"
+      "menu.users",
+      "menu.reports",
+      "user.read",
+      "user.create",
+      "user.update",
+      "report.read",
+      "report.export"
     ]
+  }
 }

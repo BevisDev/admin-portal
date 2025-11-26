@@ -1,11 +1,12 @@
 import { Image, Layout, Menu } from "antd";
 import React from "react";
 import logo from "@/assets/logo/cat-logo.png";
+import "@/styles/sidebar.css";
 import { useLocation } from "react-router-dom";
-import { GetMenu } from "../../menu/GetMenu.tsx";
-import { MenuConfig } from "../../menu/MenuConfig.ts";
-import { useTheme } from "../../hooks/useTheme.ts";
-import { darkColors, lightColors } from "../../types/theme.ts";
+import { GetMenu } from "@/menu/GetMenu.tsx";
+import { MenuConfig } from "@/menu/MenuConfig.ts";
+import { useTheme } from "@/hooks/useTheme.ts";
+import { darkColors, lightColors } from "@/types/theme.ts";
 
 const { Sider } = Layout;
 
@@ -61,6 +62,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
       <Menu
         theme={themeMode}
         mode="inline"
+        className={themeMode === "dark" ? "glow-menu" : "glow-menu-light"}
         selectedKeys={[location.pathname]}
         items={GetMenu(MenuConfig)}
         style={{

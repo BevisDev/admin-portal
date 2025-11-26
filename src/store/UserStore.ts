@@ -1,35 +1,23 @@
 import { create } from "zustand";
-import type { MeResponse, User } from "../auth/auth";
+import type { Me } from "../types/me";
 
 interface AuthState {
-  user: User | null;
-  roles: string[];
-  permissions: string[];
-  isAuthenticated: boolean;
+  me: Me | null;
 
-  setAuth: (data: MeResponse) => void;
+  setAuth: (data: Me) => void;
   logout: () => void;
 }
 
 export const userStore = create<AuthState>((set) => ({
-  user: null,
-  roles: [],
-  permissions: [],
-  isAuthenticated: false,
+  me: null,
 
   setAuth: (data) =>
     set({
-      user: data.user,
-      roles: data.roles,
-      permissions: data.permissions,
-      isAuthenticated: true,
+      me: data,
     }),
 
   logout: () =>
     set({
-      user: null,
-      roles: [],
-      permissions: [],
-      isAuthenticated: false,
+      me: null,
     }),
 }));

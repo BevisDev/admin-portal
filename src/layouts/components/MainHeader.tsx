@@ -15,8 +15,8 @@ import {
   theme,
   type MenuProps,
 } from "antd";
-import { useTheme } from "../../hooks/useTheme.ts";
-import { darkColors, lightColors } from "../../types/theme.ts";
+import { useTheme } from "@/hooks/useTheme.ts";
+import { darkColors, lightColors } from "@/types/theme.ts";
 
 const { Header } = Layout;
 
@@ -48,7 +48,7 @@ const MainHeader: React.FC<MainHeaderProps> = ({ collapsed, setCollapsed }) => {
       style={{
         height: 64,
         padding: "0 20px",
-        background: palette.sidebarBg,
+        background: palette.headerBg,
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",

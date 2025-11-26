@@ -1,6 +1,8 @@
 import { Layout } from "antd";
 import MainHeader from "./MainHeader";
 import { Outlet } from "react-router-dom";
+import { useTheme } from "@/hooks/useTheme";
+import { darkColors, lightColors } from "@/types/theme";
 
 const { Content } = Layout;
 
@@ -13,6 +15,9 @@ const MainContent: React.FC<MainContentProps> = ({
   collapsed,
   setCollapsed,
 }) => {
+  const { themeMode } = useTheme();
+  const palette = themeMode === "light" ? lightColors : darkColors;
+
   return (
     <Layout>
       {/* Header */}
@@ -22,9 +27,9 @@ const MainContent: React.FC<MainContentProps> = ({
       <Content
         style={{
           padding: 24,
-          background: "#fff",
+          background: palette.background,
           overflow: "auto",
-          height: "calc(100vh - 64px)",
+          minHeight: "calc(100vh - 64px)",
         }}
       >
         <Outlet />
