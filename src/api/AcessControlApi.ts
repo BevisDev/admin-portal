@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { GETQuery } from "../hooks/useFetchQuery";
-import { API } from "./endpoint";
+import { API } from "./api";
 import type { Response } from "@/types/Response";
 import type { User } from "@/types/user/User";
 

@@ -1,11 +1,13 @@
 import { userStore } from "@/store/UserStore";
 
 export const isAuthenticated = () => {
-  return userStore.getState().me?.IsAuthenticated;
+  const me = userStore.getState().me;
+  return me?.isAuthenticated ?? false;
 };
 
 export const isSuperAdmin = () => {
-  return userStore.getState().me?.IsSuperAdmin;
+  const me = userStore.getState().me;
+  return me?.isSuperAdmin ?? false;
 };
 
 export const hasRole = (el: string | string[]) => {
