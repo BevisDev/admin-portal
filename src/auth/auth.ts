@@ -1,12 +1,10 @@
-import { GetMe } from "../api/AuthApi";
-import { userStore } from "../store/UserStore";
-import { useEffect } from "react";
+import { userStore } from "@/store/UserStore";
 
-export const IsAuthenticated = () => {
+export const isAuthenticated = () => {
   return userStore.getState().me?.IsAuthenticated;
 };
 
-export const IsSuperAdmin = () => {
+export const isSuperAdmin = () => {
   return userStore.getState().me?.IsSuperAdmin;
 };
 
@@ -28,27 +26,4 @@ export const hasPermission = (el: string | string[]) => {
   }
 
   return permissions.includes(el);
-};
-
-export const useAuth = () => {
-  const { me, setAuth, logout } = userStore((s) => s);
-
-  const { data, error, isLoading } = GetMe();
-
-  useEffect(() => {
-    if (data) {
-      setAuth(data);
-    }
-  }, [data, setAuth]);
-
-  useEffect(() => {
-    if (error) {
-      logout();
-    }
-  }, [error, logout]);
-
-  return {
-    me,
-    loading: isLoading,
-  };
 };

@@ -1,16 +1,31 @@
 import { createContext, useContext } from "react";
-import type { ThemeMode } from "../types/theme";
+import {
+  darkColors,
+  lightColors,
+  type ThemeMode,
+} from "@/components/theme/theme";
 
 export interface ThemeContextType {
-  themeMode: ThemeMode;
-  setThemeMode: (mode: ThemeMode) => void;
+  mode: ThemeMode;
+  setMode: (mode: ThemeMode) => void;
 }
 
 const defThemeCtx: ThemeContextType = {
-  themeMode: "light",
-  setThemeMode: () => {},
+  mode: "light",
+  setMode: () => {},
 };
 
 export const ThemeContext = createContext<ThemeContextType>(defThemeCtx);
 
 export const useTheme = () => useContext(ThemeContext);
+
+export const GetTheme = () => {
+  const { mode, setMode } = useTheme();
+  const palette = mode === "light" ? lightColors : darkColors;
+
+  return {
+    mode,
+    setMode,
+    palette,
+  };
+};

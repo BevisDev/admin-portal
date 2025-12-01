@@ -5,8 +5,7 @@ import "@/styles/sidebar.css";
 import { useLocation } from "react-router-dom";
 import { GetMenu } from "@/menu/GetMenu.tsx";
 import { MenuConfig } from "@/menu/MenuConfig.ts";
-import { useTheme } from "@/hooks/useTheme.ts";
-import { darkColors, lightColors } from "@/types/theme.ts";
+import { GetTheme } from "@/hooks/useTheme.ts";
 
 const { Sider } = Layout;
 
@@ -16,9 +15,8 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
-  const { themeMode } = useTheme();
   const location = useLocation();
-  const palette = themeMode === "light" ? lightColors : darkColors;
+  const { mode, palette } = GetTheme();
 
   return (
     <Sider
@@ -27,7 +25,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
       onCollapse={setCollapsed}
       trigger={null}
       width={220}
-      theme={themeMode}
+      theme={mode}
       style={{
         minHeight: "100vh",
         background: palette.sidebarBg,
@@ -60,9 +58,9 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
       </div>
 
       <Menu
-        theme={themeMode}
+        theme={mode}
         mode="inline"
-        className={themeMode === "dark" ? "glow-menu" : "glow-menu-light"}
+        className={mode === "dark" ? "glow-menu" : "glow-menu-light"}
         selectedKeys={[location.pathname]}
         items={GetMenu(MenuConfig)}
         style={{

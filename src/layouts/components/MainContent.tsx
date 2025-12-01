@@ -1,8 +1,7 @@
 import { Layout } from "antd";
 import MainHeader from "./MainHeader";
 import { Outlet } from "react-router-dom";
-import { useTheme } from "@/hooks/useTheme";
-import { darkColors, lightColors } from "@/types/theme";
+import { GetTheme } from "@/hooks/useTheme";
 
 const { Content } = Layout;
 
@@ -15,8 +14,7 @@ const MainContent: React.FC<MainContentProps> = ({
   collapsed,
   setCollapsed,
 }) => {
-  const { themeMode } = useTheme();
-  const palette = themeMode === "light" ? lightColors : darkColors;
+  const { palette } = GetTheme();
 
   return (
     <Layout>

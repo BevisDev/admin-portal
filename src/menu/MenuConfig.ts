@@ -13,6 +13,11 @@ export const MenuConfig: MenuItem[] = [
     icon: "dashboard",
   },
   {
+    key: "/todo",
+    label: "TO DO",
+    icon: "todo",
+  },
+  {
     key: "access-control",
     icon: "accessControl",
     label: "Access Control",

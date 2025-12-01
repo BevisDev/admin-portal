@@ -1,12 +1,12 @@
+import type { AppConfig } from "@/config/Config";
 import { create } from "zustand";
-import { AppConfig } from "@/config/AppConfig";
 
-interface AppStore {
+interface ConfigState {
   appConfig: AppConfig | null;
   setAppConfig: (cf: AppConfig | null) => void;
 }
 
-export const useAppStore = create<AppStore>((set) => ({
+export const configStore = create<ConfigState>((set) => ({
   appConfig: null,
   setAppConfig: (cf) => set({ appConfig: cf }),
 }));

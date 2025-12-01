@@ -1,8 +1,8 @@
 import { Button, Input, Select, Table } from "antd";
 import { useState } from "react";
 import type { ColumnsType } from "antd/es/table";
-import type { User } from "../../../types/user";
-import { GetUsers } from "../../../api/AcessControlApi";
+import type { User } from "@/types/user/User";
+import { GetUsers } from "@/api/AcessControlApi";
 
 const columns: ColumnsType<User> = [
   {

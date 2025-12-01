@@ -2,11 +2,11 @@ import type { AxiosError, AxiosRequestConfig } from "axios";
 import axios from "axios";
 import { buildUrl, type Request } from "./useFetch";
 
-const GETQuery = <TReq, TRes>(req: Request<TReq>): Promise<TRes> => {
+export const GETQuery = <TReq, TRes>(req: Request<TReq>): Promise<TRes> => {
   return useFetchQuery<TReq, TRes>("GET", req);
 };
 
-const POSTQuery = <TReq, TRes>(req: Request<TReq>): Promise<TRes> => {
+export const POSTQuery = <TReq, TRes>(req: Request<TReq>): Promise<TRes> => {
   return useFetchQuery<TReq, TRes>("POST", req);
 };
 
@@ -25,7 +25,7 @@ const POSTQuery = <TReq, TRes>(req: Request<TReq>): Promise<TRes> => {
  *   isLoading: boolean
  * }} Fetch result.
  */
-const useFetchQuery = async <TReq, TRes>(
+export const useFetchQuery = async <TReq, TRes>(
   method: string,
   { url, headers, queryParams, pathParams, body }: Request<TReq>
 ): Promise<TRes> => {
@@ -96,6 +96,3 @@ const useFetchQuery = async <TReq, TRes>(
     };
   }
 };
-
-export default useFetchQuery;
-export { GETQuery, POSTQuery };

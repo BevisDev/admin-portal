@@ -1,3 +1,4 @@
+import { GetTheme } from "@/hooks/useTheme";
 import {
   BellOutlined,
   MenuFoldOutlined,
@@ -15,8 +16,6 @@ import {
   theme,
   type MenuProps,
 } from "antd";
-import { useTheme } from "@/hooks/useTheme.ts";
-import { darkColors, lightColors } from "@/types/theme.ts";
 
 const { Header } = Layout;
 
@@ -26,9 +25,8 @@ interface MainHeaderProps {
 }
 
 const MainHeader: React.FC<MainHeaderProps> = ({ collapsed, setCollapsed }) => {
-  const { themeMode, setThemeMode } = useTheme();
+  const { mode, setMode, palette } = GetTheme();
   const { token } = theme.useToken();
-  const palette = themeMode === "light" ? lightColors : darkColors;
 
   const profileMenuItems: MenuProps["items"] = [
     { key: "1", label: "My Profile" },
@@ -48,7 +46,7 @@ const MainHeader: React.FC<MainHeaderProps> = ({ collapsed, setCollapsed }) => {
       style={{
         height: 64,
         padding: "0 20px",
-        background: palette.headerBg,
+        background: palette.sidebarBg,
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -76,8 +74,8 @@ const MainHeader: React.FC<MainHeaderProps> = ({ collapsed, setCollapsed }) => {
         <Switch
           checkedChildren={<SunOutlined />}
           unCheckedChildren={<MoonOutlined />}
-          checked={themeMode === "light"}
-          onChange={(checked) => setThemeMode(checked ? "light" : "dark")}
+          checked={mode === "light"}
+          onChange={(checked) => setMode(checked ? "light" : "dark")}
         />
 
         {/* Notifications */}

@@ -2,7 +2,7 @@ import { Layout } from "antd";
 import Sidebar from "./components/Sidebar";
 import MainContent from "./components/MainContent";
 import { useState } from "react";
-import { useAuth } from "../hooks/userAuth";
+import { useAuth } from "../auth/useAuth";
 import Loading from "../components/loading/Loading";
 
 const HomeLayout = () => {

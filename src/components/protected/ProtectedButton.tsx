@@ -1,4 +1,4 @@
-import { hasPermission, hasRole, IsSuperAdmin } from "@/hooks/userAuth";
+import { hasPermission, hasRole, isSuperAdmin } from "@/auth/auth";
 import { Button } from "antd";
 
 interface ProtectedButtonProps {
@@ -20,7 +20,7 @@ const ProtectedButton = ({
   ...props
 }: ProtectedButtonProps) => {
   try {
-    if (IsSuperAdmin()) {
+    if (isSuperAdmin()) {
       return <Button {...props}>{children}</Button>;
     }
 

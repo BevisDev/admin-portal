@@ -1,7 +1,7 @@
-import { hasPermission, hasRole, IsSuperAdmin } from "@/hooks/userAuth";
+import { hasPermission, hasRole, isSuperAdmin } from "@/auth/auth";
 import { useTheme } from "@/hooks/useTheme";
 import { MenuConfig } from "@/menu/MenuConfig";
-import { darkColors, lightColors } from "@/types/theme";
+import { darkColors, lightColors } from "@/components/theme/theme";
 import { Typography } from "antd";
 import { Navigate, useLocation } from "react-router-dom";
 
@@ -17,7 +17,7 @@ const ProtectedPage = ({
   children,
 }: ProtectedPageProps) => {
   try {
-    if (IsSuperAdmin()) {
+    if (isSuperAdmin()) {
       return <PageItem>{children}</PageItem>;
     }
 

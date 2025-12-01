@@ -21,11 +21,11 @@ interface Error {
   message: string;
 }
 
-const GET = <TReq, TRes>(req: Request<TReq>): Response<TRes> => {
+export const GET = <TReq, TRes>(req: Request<TReq>): Response<TRes> => {
   return useFetch<TReq, TRes>("GET", req);
 };
 
-const POST = <TReq, TRes>(req: Request<TReq>): Response<TRes> => {
+export const POST = <TReq, TRes>(req: Request<TReq>): Response<TRes> => {
   return useFetch<TReq, TRes>("POST", req);
 };
 
@@ -44,7 +44,7 @@ const POST = <TReq, TRes>(req: Request<TReq>): Response<TRes> => {
  *   isLoading: boolean
  * }} Fetch result.
  */
-const useFetch = <TReq, TRes>(
+export const useFetch = <TReq, TRes>(
   method: string,
   { url, headers, queryParams, pathParams, body }: Request<TReq>
 ): Response<TRes> => {
@@ -170,6 +170,3 @@ export const buildUrl = (
 
   return result;
 };
-
-export default useFetch;
-export { GET, POST };
