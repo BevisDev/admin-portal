@@ -10,7 +10,6 @@ export interface Column {
   color?: string;
   icon?: string;
   isSystem?: boolean; // true = không cho xoá/sửa (vd: planned, done)
-  tasks: Task[];
 }
 
 export interface Task {

@@ -5,65 +5,137 @@
         "id": 1,
         "title": "Planned",
         "order": 1,
-        "isSystem": true,
-        "tasks": [
-          {
-            "id": 101,
-            "title": "Research landing page trends",
-            "description": "Compile competitor landing page designs.",
-            "dueDate": "2025-11-12",
-            "progress": 0,
-            "assignees": [201, 202],
-            "comments": 2,
-            "views": 2,
-            "columnId": 1,
-            "order": 1
-          },
-          {
-            "id": 102,
-            "title": "Responsive website design",
-            "description": "Create responsive breakpoints",
-            "dueDate": "2025-11-14",
-            "progress": 0,
-            "assignees": [202],
-            "comments": 1,
-            "views": 6,
-            "columnId": 1,
-            "order": 2
-          }
-        ]
+        "isSystem": true
       },
       {
         "id": 2,
         "title": "In Progress",
-        "order": 2,
-        "tasks": [
-          {
-            "id": 103,
-            "title": "Machine learning progress",
-            "description": "Implement basic ML models",
-            "dueDate": "2025-11-12",
-            "progress": 50,
-            "assignees": [202],
-            "comments": 3,
-            "views": 32,
-            "columnId": 2,
-            "order": 1
-          }
-        ]
+        "order": 2
       },
       {
         "id": 3,
         "title": "Done",
         "order": 3,
-        "isSystem": true,
-        "tasks": []
+        "isSystem": true
+      }
+    ],
+    "tasks": [
+      {
+        "id": 101,
+        "title": "Research landing page trends",
+        "description": "Compile competitor landing page designs.",
+        "dueDate": "2025-11-12",
+        "progress": 0,
+        "assignees": [
+          201,
+          202
+        ],
+        "comments": 2,
+        "views": 2,
+        "columnId": 1,
+        "order": 1
+      },
+      {
+        "id": 102,
+        "title": "Responsive website design",
+        "description": "Create responsive breakpoints",
+        "dueDate": "2025-11-14",
+        "progress": 0,
+        "assignees": [
+          202
+        ],
+        "comments": 1,
+        "views": 6,
+        "columnId": 1,
+        "order": 2
+      },
+      {
+        "id": 103,
+        "title": "Machine learning progress",
+        "description": "Implement basic ML models",
+        "dueDate": "2025-11-12",
+        "progress": 50,
+        "assignees": [
+          202
+        ],
+        "comments": 3,
+        "views": 32,
+        "columnId": 2,
+        "order": 1
+      },
+      {
+        "id": 104,
+        "title": "Learn Java",
+        "description": "Implement basic ML models",
+        "dueDate": "2025-11-12",
+        "progress": 50,
+        "assignees": [
+          202
+        ],
+        "comments": 3,
+        "views": 32,
+        "columnId": 1,
+        "order": 1
+      },
+      {
+        "id": 105,
+        "title": "Learn Python",
+        "description": "Implement basic ML models",
+        "dueDate": "2025-11-12",
+        "progress": 50,
+        "assignees": [
+          202
+        ],
+        "comments": 3,
+        "views": 32,
+        "columnId": 1,
+        "order": 1
+      },
+      {
+        "id": 106,
+        "title": "Learn Python",
+        "description": "Implement basic ML models",
+        "dueDate": "2025-11-12",
+        "progress": 50,
+        "assignees": [
+          202
+        ],
+        "comments": 3,
+        "views": 32,
+        "columnId": 1,
+        "order": 1
+      },
+      {
+        "id": 107,
+        "title": "Learn SQL",
+        "description": "Implement basic ML models",
+        "dueDate": "2025-11-12",
+        "progress": 50,
+        "assignees": [
+          202
+        ],
+        "comments": 3,
+        "views": 32,
+        "columnId": 1,
+        "order": 1
       }
     ],
     "users": [
-      { "id": 201, "name": "Anna Kim", "initials": "AK" },
-      { "id": 202, "name": "Bevis Dev", "initials": "BD" },
-      { "id": 203, "name": "Duyen Le", "initials": "DL" }
+      {
+        "id": 201,
+        "name": "Anna Kim",
+        "initials": "AK"
+      },
+      {
+        "id": 202,
+        "name": "Bevis Dev",
+        "initials": "BD"
+      },
+      {
+        "id": 203,
+        "name": "Duyen Le",
+        "initials": "DL"
+      }
     ]
   }
 }

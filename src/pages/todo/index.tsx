@@ -1,22 +1,20 @@
-import { Avatar, Button, Input } from "antd";
-import Tab from "./components/Tab";
+import { GetTodo } from "@/api/TodoApi";
+import { Avatar, Button, Input, Tabs } from "antd";
+import BoardView from "./components/BoardView";
 import {
   FilterOutlined,
   PlusOutlined,
   SearchOutlined,
   ShareAltOutlined,
 } from "@ant-design/icons";
-import { GetTodo } from "@/api/TodoApi";
-import ColumnCard from "./components/ColumnCard";
+import TodoView from "./components/TodoView";
+import TableView from "./components/TableView";
 
 const ToDo = () => {
   const { data } = GetTodo();
 
   return (
     <div>
-      {/* Tabs */}
-      <Tab />
-
       {/* Toolbar */}
       <div
         style={{
@@ -43,7 +41,14 @@ const ToDo = () => {
           Add New
         </Button>
 
-        <Avatar.Group maxCount={3} maxStyle={{ background: "#111" }}>
+        <Avatar.Group
+          max={{
+            count: 3,
+            style: {
+              background: "#111",
+            },
+          }}
+        >
           <Avatar style={{ background: "#00B894" }}>AK</Avatar>
           <Avatar style={{ background: "#6C5CE7" }}>BD</Avatar>
           <Avatar style={{ background: "#0984E3" }}>DL</Avatar>
@@ -52,11 +57,28 @@ const ToDo = () => {
         <Button>Add assignee</Button>
       </div>
 
-      {/* Board Columns */}
-      <div style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
-        {data &&
-          data.columns.map((col) => <ColumnCard key={col.id} col={col} />)}
-      </div>
+      {/* Tabs */}
+      <Tabs
+        defaultActiveKey="board"
+        items={[
+          {
+            key: "board",
+            label: "Board",
+            children: <BoardView data={data} />,
+          },
+          {
+            key: "todo",
+            label: "To-do",
+            children: <TodoView tasks={data?.tasks || []} />,
+          },
+          {
+            key: "table",
+            label: "Table",
+            children: <TableView tasks={data?.tasks || []} />,
+          },
+          { key: "list", label: "List" },
+        ]}
+      />
     </div>
   );
 };

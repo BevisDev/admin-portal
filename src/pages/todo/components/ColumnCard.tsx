@@ -1,11 +1,15 @@
-import type { Column } from "@/types/todo/board";
+import type { Column, Task } from "@/types/todo/Board";
 import { MoreOutlined } from "@ant-design/icons";
 import { Card } from "antd";
 import TaskCard from "./TaskCard";
+import SortableTask from "./SortableTask";
 
-const ColumnCard: React.FC<{
+interface ColumnCardProps {
   col: Column;
-}> = ({ col }) => {
+  tasks: Task[];
+}
+
+const ColumnCard: React.FC<ColumnCardProps> = ({ col, tasks }) => {
   return (
     <Card
       title={
@@ -27,10 +31,16 @@ const ColumnCard: React.FC<{
         borderRadius: 16,
         borderColor: "#EEE",
       }}
-      bodyStyle={{ padding: 16 }}
+      styles={{
+        body: {
+          padding: 16,
+        },
+      }}
     >
-      {col.tasks.map((task) => (
-        <TaskCard key={task.id} task={task} />
+      {tasks.map((task) => (
+        <SortableTask key={task.id} id={task.id}>
+          <TaskCard key={task.id} task={task} />
+        </SortableTask>
       ))}
     </Card>
   );

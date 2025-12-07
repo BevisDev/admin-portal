@@ -10,12 +10,10 @@ export interface ThemeContextType {
   setMode: (mode: ThemeMode) => void;
 }
 
-const defThemeCtx: ThemeContextType = {
+export const ThemeContext = createContext<ThemeContextType>({
   mode: "light",
   setMode: () => {},
-};
-
-export const ThemeContext = createContext<ThemeContextType>(defThemeCtx);
+});
 
 export const useTheme = () => useContext(ThemeContext);
 

@@ -1,4 +1,4 @@
-import type { Task } from "@/types/todo/board";
+import type { Task } from "@/types/todo/Board";
 import { CalendarOutlined } from "@ant-design/icons";
 import { Card, Space } from "antd";
 
