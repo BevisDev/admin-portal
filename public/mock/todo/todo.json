@@ -1,0 +1,179 @@
+{
+  "data": {
+    "columns": [
+      {
+        "id": 1,
+        "title": "Planned",
+        "order": 1,
+        "total": 7
+      },
+      {
+        "id": 2,
+        "title": "In Progress",
+        "order": 2,
+        "total": 3
+      },
+      {
+        "id": 3,
+        "title": "Done",
+        "order": 3,
+        "total": 3
+      }
+    ],
+    "tasks": [
+      {
+        "id": 101,
+        "title": "Research landing page trends",
+        "description": "Lorem Ipsum is a type of dummy text used in the printing and typesetting industry. It has been the standard placeholder text since the 1500s, originating from a scrambled version of a work by the Roman philosopher Cicero. It is commonly used to fill spaces in design layouts to give an impression of how the final text will look.",
+        "dueDate": "2025-11-12",
+        "progress": 0,
+        "assignees": [201, 202],
+        "comments": 2,
+        "views": 2,
+        "columnId": 1,
+        "order": 1,
+        "priority": 1
+      },
+      {
+        "id": 102,
+        "title": "Research hero section page",
+        "description": "Lorem Ipsum is a type of dummy text used in the printing and typesetting industry. It has been the standard placeholder text since the 1500s, originating from a scrambled version of a work by the Roman philosopher Cicero. It is commonly used to fill spaces in design layouts to give an impression of how the final text will look.",
+        "dueDate": "2025-11-12",
+        "progress": 0,
+        "assignees": [201, 202],
+        "comments": 2,
+        "views": 2,
+        "columnId": 1,
+        "order": 1,
+        "priority": 2
+      },
+      {
+        "id": 109,
+        "title": "Research footer section page",
+        "description": "Lorem Ipsum is a type of dummy text used in the printing and typesetting industry. It has been the standard placeholder text since the 1500s, originating from a scrambled version of a work by the Roman philosopher Cicero. It is commonly used to fill spaces in design layouts to give an impression of how the final text will look.",
+        "dueDate": "2025-11-12",
+        "progress": 0,
+        "assignees": [201, 202],
+        "comments": 2,
+        "views": 2,
+        "columnId": 1,
+        "order": 1,
+        "priority": 1
+      },
+      {
+        "id": 110,
+        "title": "Research header section page",
+        "description": "Compile competitor landing page designs.",
+        "dueDate": "2025-11-12",
+        "progress": 0,
+        "assignees": [201, 202],
+        "comments": 2,
+        "views": 2,
+        "columnId": 1,
+        "order": 1,
+        "priority": 1
+      },
+      {
+        "id": 111,
+        "title": "Research main content section page",
+        "description": "Compile competitor landing page designs.",
+        "dueDate": "2025-11-12",
+        "progress": 0,
+        "assignees": [201, 202],
+        "comments": 2,
+        "views": 2,
+        "columnId": 1,
+        "order": 1
+      },
+      {
+        "id": 103,
+        "title": "Responsive website design",
+        "description": "Create responsive breakpoints",
+        "dueDate": "2025-11-14",
+        "progress": 80,
+        "assignees": [202],
+        "comments": 1,
+        "views": 6,
+        "columnId": 1,
+        "order": 2
+      },
+      {
+        "id": 104,
+        "title": "Machine learning progress",
+        "description": "Implement basic ML models",
+        "dueDate": "2025-11-12",
+        "progress": 50,
+        "assignees": [202],
+        "comments": 3,
+        "views": 32,
+        "columnId": 2,
+        "order": 1
+      },
+      {
+        "id": 105,
+        "title": "Learn Java",
+        "description": "Implement basic ML models",
+        "dueDate": "2025-11-12",
+        "progress": 65,
+        "assignees": [202],
+        "comments": 3,
+        "views": 32,
+        "columnId": 2,
+        "order": 1
+      },
+      {
+        "id": 106,
+        "title": "Learn Python",
+        "description": "Implement basic ML models",
+        "dueDate": "2025-11-12",
+        "progress": 100,
+        "assignees": [202],
+        "comments": 3,
+        "views": 32,
+        "columnId": 3,
+        "order": 1
+      },
+      {
+        "id": 107,
+        "title": "Learn C#",
+        "description": "Implement basic ML models",
+        "dueDate": "2025-11-12",
+        "progress": 100,
+        "assignees": [202],
+        "comments": 3,
+        "views": 32,
+        "columnId": 3,
+        "order": 1
+      },
+      {
+        "id": 108,
+        "title": "Learn SQL",
+        "description": "Implement basic ML models",
+        "dueDate": "2025-11-12",
+        "progress": 100,
+        "assignees": [202],
+        "comments": 3,
+        "views": 32,
+        "columnId": 3,
+        "order": 1
+      }
+    ],
+    "users": [
+      {
+        "id": 201,
+        "name": "Anna Kim",
+        "initials": "AK"
+      },
+      {
+        "id": 202,
+        "name": "Bevis Dev",
+        "initials": "BD"
+      },
+      {
+        "id": 203,
+        "name": "Duyen Le",
+        "initials": "DL"
+      }
+    ]
+  }
+}

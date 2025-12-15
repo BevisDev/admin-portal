@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ThemeContext } from "../hooks/useTheme.ts";
-import type { ThemeMode } from "@/components/theme/theme.ts";
+import type { ThemeMode } from "@/styles/theme.ts";
 import { getLocal, setLocal } from "@/hooks/storage.ts";
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {

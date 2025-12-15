@@ -1,10 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
-import HomeLayout from "../layouts/HomeLayout";
-import Dashboard from "../pages/dashboard/DashBoard";
-import Users from "../pages/accessControl/users/Users";
-import NotFound from "../pages/NotFound";
+import HomeLayout from "@/layouts/home/HomeLayout";
+import Dashboard from "@/pages/dashboard/DashBoard";
+import Users from "@/pages/accessControl/users/Users";
+import NotFound from "@/pages/NotFound";
 import ProtectedPage from "@/components/protected/ProtectedPage";
-// import { ProtectedRoute } from "../auth/ProtectedRoute";
+import ToDo from "@/pages/todo";
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +16,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedPage permissions="user.view" roles={["admin"]}>
             <Dashboard />
+          </ProtectedPage>
+        ),
+      },
+      {
+        path: "/todo",
+        element: (
+          <ProtectedPage permissions="todo.view" roles={["admin"]}>
+            <ToDo />
           </ProtectedPage>
         ),
       },

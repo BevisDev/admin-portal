@@ -24,7 +24,7 @@ interface MainHeaderProps {
   setCollapsed: () => void;
 }
 
-const MainHeader: React.FC<MainHeaderProps> = ({ collapsed, setCollapsed }) => {
+const MainHeader = ({ collapsed, setCollapsed }: MainHeaderProps) => {
   const { mode, setMode, palette } = GetTheme();
   const { token } = theme.useToken();
 

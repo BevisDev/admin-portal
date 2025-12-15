@@ -6,4 +6,18 @@ export const SysConfig = {
 
 export interface AppConfig {
   version: string;
+  priorities: PriorityConfig[];
+  statuses: StatusConfig[];
+}
+
+export interface PriorityConfig {
+  id: number;
+  label: string;
+  color: string;
+}
+
+export interface StatusConfig {
+  id: number;
+  label: string;
+  color: string;
 }

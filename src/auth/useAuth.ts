@@ -1,10 +1,10 @@
-import { userStore } from "@/store/UserStore";
+import { getUserStore } from "@/store/UserStore";
 import { useEffect } from "react";
 import { GetMe } from "./GetMe";
 
 export const useAuth = () => {
-  const { me, setAuth, logout } = userStore((s) => s);
   const { data, error, isLoading } = GetMe();
+  const { me, setAuth, logout } = getUserStore((s) => s);
 
   useEffect(() => {
     if (data) {

@@ -1,5 +1,4 @@
 import { Image, Layout, Menu } from "antd";
-import React from "react";
 import logo from "@/assets/logo/cat-logo.png";
 import "@/styles/sidebar.css";
 import { useLocation } from "react-router-dom";
@@ -14,7 +13,7 @@ interface SidebarProps {
   setCollapsed: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
+const Sidebar = ({ collapsed, setCollapsed }: SidebarProps) => {
   const location = useLocation();
   const { mode, palette } = GetTheme();
 

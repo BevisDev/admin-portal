@@ -1,5 +1,54 @@
 {
   "data": {
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "priorities": [
+      {
+        "id": 1,
+        "label": "Low",
+        "color": "default"
+      },
+      {
+        "id": 2,
+        "label": "Medium",
+        "color": "blue"
+      },
+      {
+        "id": 3,
+        "label": "High",
+        "color": "orange"
+      },
+      {
+        "id": 4,
+        "label": "Urgent",
+        "color": "red"
+      }
+    ],
+    "statuses": [
+      {
+        "id": 1,
+        "label": "Todo",
+        "color": "default"
+      },
+      {
+        "id": 2,
+        "label": "In Progress",
+        "color": "gold"
+      },
+      {
+        "id": 3,
+        "label": "Review",
+        "color": "cyan"
+      },
+      {
+        "id": 4,
+        "label": "Blocked",
+        "color": "red"
+      },
+      {
+        "id": 5,
+        "label": "Done",
+        "color": "green"
+      }
+    ]
   }
 }

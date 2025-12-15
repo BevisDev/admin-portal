@@ -1,15 +1,17 @@
-import { userStore } from "@/store/UserStore";
+import { getUserStore } from "@/store/UserStore";
 
 export const isAuthenticated = () => {
-  return userStore.getState().me?.IsAuthenticated;
+  const me = getUserStore.getState().me;
+  return me?.isAuthenticated ?? false;
 };
 
 export const isSuperAdmin = () => {
-  return userStore.getState().me?.IsSuperAdmin;
+  const me = getUserStore.getState().me;
+  return me?.isSuperAdmin ?? false;
 };
 
 export const hasRole = (el: string | string[]) => {
-  const roles = userStore.getState().me?.roles ?? [];
+  const roles = getUserStore.getState().me?.roles ?? [];
 
   if (Array.isArray(el)) {
     return el.some((r) => roles.includes(r));
@@ -19,7 +21,7 @@ export const hasRole = (el: string | string[]) => {
 };
 
 export const hasPermission = (el: string | string[]) => {
-  const permissions = userStore.getState().me?.permissions ?? [];
+  const permissions = getUserStore.getState().me?.permissions ?? [];
 
   if (Array.isArray(el)) {
     return el.some((p) => permissions.includes(p));

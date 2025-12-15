@@ -1,5 +1,5 @@
+import type { Me } from "@/auth/Me";
 import { create } from "zustand";
-import type { Me } from "../auth/Me";
 
 interface AuthState {
   me: Me | null;
@@ -8,7 +8,7 @@ interface AuthState {
   logout: () => void;
 }
 
-export const userStore = create<AuthState>((set) => ({
+export const getUserStore = create<AuthState>((set) => ({
   me: null,
 
   setAuth: (data) =>

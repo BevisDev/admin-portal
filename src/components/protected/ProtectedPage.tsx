@@ -1,7 +1,6 @@
 import { hasPermission, hasRole, isSuperAdmin } from "@/auth/auth";
-import { useTheme } from "@/hooks/useTheme";
+import { GetTheme } from "@/hooks/useTheme";
 import { MenuConfig } from "@/menu/MenuConfig";
-import { darkColors, lightColors } from "@/components/theme/theme";
 import { Typography } from "antd";
 import { Navigate, useLocation } from "react-router-dom";
 
@@ -38,13 +37,12 @@ const ProtectedPage = ({
 
 const PageItem = ({ children }: { children: React.ReactNode }) => {
   const { pathname } = useLocation();
+  // get theme
+  const { palette } = GetTheme();
+
   // get label
   const found = MenuConfig.find((m) => m.key === pathname);
   const title = found?.label || "";
-
-  // get theme
-  const { themeMode } = useTheme();
-  const palette = themeMode === "light" ? lightColors : darkColors;
 
   return (
     <div

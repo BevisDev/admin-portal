@@ -10,10 +10,7 @@ interface MainContentProps {
   setCollapsed: () => void;
 }
 
-const MainContent: React.FC<MainContentProps> = ({
-  collapsed,
-  setCollapsed,
-}) => {
+const MainContent = ({ collapsed, setCollapsed }: MainContentProps) => {
   const { palette } = GetTheme();
 
   return (

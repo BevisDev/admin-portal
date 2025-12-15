@@ -14,7 +14,7 @@ export const MenuConfig: MenuItem[] = [
   },
   {
     key: "/todo",
-    label: "TO DO",
+    label: "To-do",
     icon: "todo",
   },
   {

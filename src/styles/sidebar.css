@@ -1,29 +1,81 @@
-.glow-menu .glow-menu-light .ant-menu-item {
+/* ==== BASE STYLE FOR MENU ITEMS ==== */
+.glow-menu .ant-menu-item,
+.glow-menu-light .ant-menu-item {
   border-radius: 10px !important;
   margin: 4px 8px !important;
   transition: all 0.25s ease;
+  background: transparent !important;
 }
 
-/* Hover */
+/* ==== DARK MODE HOVER ==== */
 .glow-menu .ant-menu-item:hover {
   background: rgba(0, 185, 255, 0.18) !important;
 }
 
+/* ==== DARK MODE SELECTED ITEM ==== */
 .glow-menu .ant-menu-item-selected {
   background: rgba(0, 185, 255, 0.32) !important;
-  border-radius: 12px !important;
+  color: #dff9ff !important;
+  font-weight: 500 !important;
 
   /* Hiệu ứng glow */
   box-shadow: 0 0 12px rgba(0, 185, 255, 0.55), 0 0 20px rgba(0, 185, 255, 0.25),
     inset 0 0 6px rgba(0, 185, 255, 0.35) !important;
-
-  color: #dff9ff !important;
-  font-weight: 500 !important;
 }
 
-/* Xóa border left xanh mặc định của Antd */
+/* ==== REMOVE ANTD DEFAULT BLUE BAR ==== */
 .glow-menu .glow-menu-light .ant-menu-item-selected::after {
   display: none !important;
+}
+
+.glow-menu .ant-menu-item,
+.glow-menu .ant-menu-item-selected {
+  overflow: visible !important;
+  position: relative;
+  border-radius: 12px !important;
+}
+
+/* ==== NEON ANIMATED BORDER (Dark mode ONLY) ==== */
+.glow-menu .ant-menu-item-selected::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: inherit;
+
+  background: conic-gradient(
+    from 0deg,
+    rgba(0, 225, 255, 0) 0deg,
+    rgba(0, 225, 255, 1) 90deg,
+    rgba(0, 225, 255, 0) 180deg,
+    rgba(0, 225, 255, 1) 270deg,
+    rgba(0, 225, 255, 0) 360deg
+  );
+
+  background-size: 250% 250%;
+  animation: glowBorderAnim 3s linear infinite;
+
+  /* Chỉ hiển thị viền, không phủ background item */
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+
+  pointer-events: none;
+}
+
+/* Animation chạy border */
+@keyframes glowBorderAnim {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* ==== LIGHT THEME MENU STYLE ==== */
@@ -31,7 +83,6 @@
   background: rgba(140, 90, 255, 0.14) !important;
   border-radius: 10px !important;
 
-  /* Không glow, chỉ soft shadow */
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04),
     inset 0 0 0 1px rgba(140, 90, 255, 0.25) !important;
 

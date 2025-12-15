@@ -1,4 +1,5 @@
 import {
+  CheckSquareOutlined,
   DashboardOutlined,
   KeyOutlined,
   SafetyOutlined,
@@ -14,4 +15,5 @@ export const MenuIcon: Record<string, React.ReactNode> = {
   users: <UserOutlined />,
   roles: <TeamOutlined />,
   permissions: <KeyOutlined />,
+  todo: <CheckSquareOutlined />,
 };

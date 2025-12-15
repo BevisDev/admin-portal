@@ -10,6 +10,6 @@ export interface Me {
   user: InfoMe | null;
   roles: string[];
   permissions: string[];
-  IsAuthenticated: boolean;
-  IsSuperAdmin: boolean;
+  isAuthenticated: boolean;
+  isSuperAdmin: boolean;
 }

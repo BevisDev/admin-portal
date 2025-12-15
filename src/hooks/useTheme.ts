@@ -3,19 +3,17 @@ import {
   darkColors,
   lightColors,
   type ThemeMode,
-} from "@/components/theme/theme";
+} from "@/styles/theme";
 
 export interface ThemeContextType {
   mode: ThemeMode;
   setMode: (mode: ThemeMode) => void;
 }
 
-const defThemeCtx: ThemeContextType = {
+export const ThemeContext = createContext<ThemeContextType>({
   mode: "light",
   setMode: () => {},
-};
-
-export const ThemeContext = createContext<ThemeContextType>(defThemeCtx);
+});
 
 export const useTheme = () => useContext(ThemeContext);
 

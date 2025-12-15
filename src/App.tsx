@@ -5,6 +5,8 @@ import { GetTheme } from "./hooks/useTheme.ts";
 import Loading from "./components/loading/Loading.tsx";
 import { useConfig } from "./config/useConfig.tsx";
 import { ThemeProvider } from "./providers/ThemeProvider.tsx";
+import { useAuth } from "./auth/useAuth.ts";
+import { useEffect } from "react";
 
 const { defaultAlgorithm, darkAlgorithm } = theme;
 
@@ -19,8 +21,14 @@ function App() {
 const AppContent = () => {
   const { mode, palette } = GetTheme();
   const { loading, hasError } = useConfig();
+  const { me, loading: authLoading } = useAuth();
 
-  if (loading || hasError) {
+  useEffect(() => {
+    document.body.style.backgroundColor = palette.background;
+    document.body.style.color = palette.text;
+  }, [palette]);
+
+  if (loading || !me?.isAuthenticated || authLoading || hasError) {
     return <Loading />;
   }
 
