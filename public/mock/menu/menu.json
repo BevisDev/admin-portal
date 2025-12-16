@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "path": "/todo",
+      "label": "To-do",
+      "icon": "todo",
+      "permissions": "todo.view"
+    },
+    {
+      "path": "/accessControl",
+      "icon": "accessControl",
+      "label": "Access Control",
+      "children": [
+        {
+          "path": "/users",
+          "icon": "users",
+          "label": "Users",
+          "permissions": "users.view"
+        }
+      ]
+    },
+    {
+      "path": "/settings",
+      "label": "Settings",
+      "icon": "settings"
+    }
+  ]
+}

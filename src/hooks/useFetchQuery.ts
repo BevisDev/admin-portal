@@ -10,6 +10,18 @@ export const POSTQuery = <TReq, TRes>(req: Request<TReq>): Promise<TRes> => {
   return useFetchQuery<TReq, TRes>("POST", req);
 };
 
+export const PUTQuery = <TReq, TRes>(req: Request<TReq>): Promise<TRes> => {
+  return useFetchQuery<TReq, TRes>("PUT", req);
+};
+
+export const PATCHQuery = <TReq, TRes>(req: Request<TReq>): Promise<TRes> => {
+  return useFetchQuery<TReq, TRes>("PATCH", req);
+};
+
+export const DELETEQuery = <TReq, TRes>(req: Request<TReq>): Promise<TRes> => {
+  return useFetchQuery<TReq, TRes>("DELETE", req);
+};
+
 /**
  * React hook to fetch data with Axios combine with ReactQuery
  *

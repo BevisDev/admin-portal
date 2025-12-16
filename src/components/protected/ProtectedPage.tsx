@@ -1,26 +1,21 @@
-import { hasPermission, hasRole, isSuperAdmin } from "@/auth/auth";
-import { GetTheme } from "@/hooks/useTheme";
-import { MenuConfig } from "@/menu/MenuConfig";
+import { hasPermission, isAuthenticated, isSuperAdmin } from "@/utils/auth";
 import { Typography } from "antd";
 import { Navigate, useLocation } from "react-router-dom";
+import useTheme from "@/hooks/useTheme";
+import { Routes } from "@/router/routes";
 
 interface ProtectedPageProps {
   permissions?: string | string[];
-  roles?: string | string[];
   children: React.ReactNode;
 }
 
-const ProtectedPage = ({
-  permissions,
-  roles,
-  children,
-}: ProtectedPageProps) => {
+const ProtectedPage = ({ permissions, children }: ProtectedPageProps) => {
   try {
-    if (isSuperAdmin()) {
-      return <PageItem>{children}</PageItem>;
+    if (!isAuthenticated()) {
+      return <Navigate to="/login" replace />;
     }
 
-    if (roles && hasRole(roles)) {
+    if (isSuperAdmin()) {
       return <PageItem>{children}</PageItem>;
     }
 
@@ -28,21 +23,21 @@ const ProtectedPage = ({
       return <PageItem>{children}</PageItem>;
     }
 
-    return <Navigate to="/NotFound" replace />;
+    return <Navigate to="/404" replace />;
   } catch (err) {
     console.error(err);
-    return <Navigate to="/NotFound" replace />;
+    return <Navigate to="/500" replace />;
   }
 };
 
 const PageItem = ({ children }: { children: React.ReactNode }) => {
   const { pathname } = useLocation();
   // get theme
-  const { palette } = GetTheme();
+  const { palette } = useTheme();
 
   // get label
-  const found = MenuConfig.find((m) => m.key === pathname);
-  const title = found?.label || "";
+  const menuMap = Routes.find((s) => s.path == pathname);
+  const title = menuMap?.label || "";
 
   return (
     <div

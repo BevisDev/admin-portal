@@ -1,60 +1,39 @@
-import { Button, DatePicker, Form, Input, Modal } from "antd";
+import type { Task } from "@/types/todo/Board";
+import { Modal } from "antd";
 
-interface ModalTaskProps {
+interface ModalTask {
+  task: Task;
   open: boolean;
-  onClose: React.Dispatch<React.SetStateAction<boolean>>;
-  //   onCreate: () => void;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
-const ModalTask = ({ open, onClose }: ModalTaskProps) => {
+const ModalTask = ({ task, open, setOpen }: ModalTask) => {
   return (
     <Modal
-      title="Create Task"
+      title="Task detail"
       open={open}
-      onCancel={(prev) => onClose(!prev)}
+      onCancel={(prev) => setOpen(!prev)}
       footer={null}
     >
-      <Form
-        layout="vertical"
-        // onFinish={(values) => {
-        //   const newTask = {
-        //     id: Date.now(),
-        //     title: values.title,
-        //     description: values.description,
-        //     dueDate: values.dueDate?.format("YYYY-MM-DD"),
-        //     progress: 0,
-        //     columnId: 1, // hoặc cột default bạn muốn
-        //   };
+      <div>
+        <h2>{task.title}</h2>
 
-        // //   setTasks((prev) => [...prev, newTask]);
-        // //   setOpenCreateModal(false);
-        // }}
-      >
-        <Form.Item label="Title" name="title" rules={[{ required: true }]}>
-          <Input placeholder="Task title..." />
-        </Form.Item>
+        <p style={{ color: "#666", marginBottom: 12 }}>
+          {task.description || "No description"}
+        </p>
 
-        <Form.Item label="Description" name="description">
-          <Input.TextArea rows={3} placeholder="Task description..." />
-        </Form.Item>
+        <p>Column: {task.columnId}</p>
+        <p>
+          <b>Due date:</b> {task.dueDate || "-"}
+        </p>
 
-        <Form.Item label="Due Date" name="dueDate">
-          <DatePicker
-            showTime
-            format="YYYY-MM-DD HH:mm"
-            style={{ width: "100%" }}
-          />
-        </Form.Item>
+        {/* <p>
+          <b>Priority:</b> {task.priorityId}
+        </p>
 
-        <Button
-          type="primary"
-          htmlType="submit"
-          block
-          style={{ background: "#111" }}
-        >
-          Create Task
-        </Button>
-      </Form>
+        <p>
+          <b>Status:</b> {task.statusId}
+        </p> */}
+      </div>
     </Modal>
   );
 };

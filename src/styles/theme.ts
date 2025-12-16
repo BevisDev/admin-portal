@@ -1,6 +1,4 @@
-export type ThemeMode = "light" | "dark";
-
-export const lightColors = {
+export const lightColorsDef = {
   primary: "#9c6bff",
   background: "#faf7ff",
   sidebarBg: "#f3eeff",
@@ -14,7 +12,7 @@ export const lightColors = {
   headerBg: "#ffffff",
 };
 
-export const darkColors = {
+export const darkColorsDef = {
   primary: "#b498ff",
   background: "#17141f",
   sidebarBg: "#1d1a27",
@@ -26,19 +24,4 @@ export const darkColors = {
   cardBg: "#221f2c",
   border: "#383245",
   headerBg: "#201c2b",
-};
-
-export const themeTokens = {
-  purple: {
-    colorPrimary: "#9c6bff",
-  },
-  blue: {
-    colorPrimary: "#3e8cff",
-  },
-  green: {
-    colorPrimary: "#52c41a",
-  },
-  orange: {
-    colorPrimary: "#fa8c16",
-  },
 };

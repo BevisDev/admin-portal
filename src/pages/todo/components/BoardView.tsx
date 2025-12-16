@@ -18,7 +18,6 @@ import {
 import TaskCard from "./TaskCard";
 import DroppableItem from "@/components/dnd/DroppableItem";
 import { Flex } from "antd";
-import { getConfigStore } from "@/store/ConfigStore";
 
 interface BoardViewProps {
   tasks: Task[];

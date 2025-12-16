@@ -1,9 +1,7 @@
-import { GetTodo } from "@/api/TodoApi";
 import { Avatar, Button, Flex, Input, Tabs } from "antd";
 import BoardView from "./components/BoardView";
 import {
   FilterOutlined,
-  PlusOutlined,
   SearchOutlined,
   ShareAltOutlined,
 } from "@ant-design/icons";
@@ -11,15 +9,12 @@ import TodoView from "./components/TodoView";
 import TableView from "./components/TableView";
 import { useEffect, useState } from "react";
 import type { Column, Task } from "@/types/todo/Board";
-import ModalTask from "./components/ModalTask";
-import { GetTheme } from "@/hooks/useTheme";
+import { useTodoQuery } from "@/api/todo";
 
-const ToDo = () => {
-  const { mode } = GetTheme();
-  const { data, isLoading } = GetTodo();
+const ToDoPage = () => {
+  const { data, isLoading } = useTodoQuery();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [cols, setCols] = useState<Column[]>([]);
-  const [openModalTask, setOpenModalTask] = useState<boolean>(false);
 
   useEffect(() => {
     if (data) {
@@ -49,7 +44,7 @@ const ToDo = () => {
         <Button icon={<FilterOutlined />}>Filter</Button>
         <Button icon={<ShareAltOutlined />}>Share</Button>
 
-        <Button
+        {/* <Button
           type="primary"
           style={{
             background: mode == "dark" ? "#1f1f20ff" : "#f0f0f0",
@@ -58,9 +53,7 @@ const ToDo = () => {
           onClick={() => setOpenModalTask(true)}
         >
           Add Task
-        </Button>
-
-        <ModalTask open={openModalTask} onClose={setOpenModalTask} />
+        </Button> */}
 
         <Avatar.Group
           max={{
@@ -106,4 +99,4 @@ const ToDo = () => {
   );
 };
 
-export default ToDo;
+export default ToDoPage;

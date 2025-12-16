@@ -29,6 +29,18 @@ export const POST = <TReq, TRes>(req: Request<TReq>): Response<TRes> => {
   return useFetch<TReq, TRes>("POST", req);
 };
 
+export const PUT = <TReq, TRes>(req: Request<TReq>): Response<TRes> => {
+  return useFetch<TReq, TRes>("PUT", req);
+};
+
+export const PATCH = <TReq, TRes>(req: Request<TReq>): Response<TRes> => {
+  return useFetch<TReq, TRes>("PATCH", req);
+};
+
+export const DELETE = <TReq, TRes>(req: Request<TReq>): Response<TRes> => {
+  return useFetch<TReq, TRes>("DELETE", req);
+};
+
 /**
  * React hook to fetch data with Axios.
  *

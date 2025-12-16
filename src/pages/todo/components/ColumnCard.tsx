@@ -1,8 +1,10 @@
 import type { Column, Task } from "@/types/todo/Board";
-import { MoreOutlined } from "@ant-design/icons";
-import { Card } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { Card, Tooltip } from "antd";
 import TaskCard from "./TaskCard";
 import SortableItem from "@/components/dnd/SortableItem";
+import { useState } from "react";
+import ModalAddTask from "./ModalAddTask";
 
 interface ColumnCardProps {
   col: Column;
@@ -10,6 +12,8 @@ interface ColumnCardProps {
 }
 
 const ColumnCard = ({ col, tasks }: ColumnCardProps) => {
+  const [openModalTask, setOpenModalTask] = useState<boolean>(false);
+
   return (
     <Card
       title={
@@ -24,7 +28,25 @@ const ColumnCard = ({ col, tasks }: ColumnCardProps) => {
           <span>
             {col.title} ({col.total})
           </span>
-          <MoreOutlined style={{ cursor: "pointer" }} />
+          <Tooltip title="Add task">
+            <PlusOutlined
+              style={{
+                cursor: "pointer",
+                fontSize: 16,
+                color: "#a5b4fc",
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpenModalTask(true);
+              }}
+            />
+          </Tooltip>
+
+          <ModalAddTask
+            colId={col.id}
+            open={openModalTask}
+            onClose={setOpenModalTask}
+          />
         </div>
       }
       style={{

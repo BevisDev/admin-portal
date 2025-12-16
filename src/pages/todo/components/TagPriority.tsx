@@ -1,4 +1,4 @@
-import { getConfigStore } from "@/store/ConfigStore";
+import { useConstantStore } from "@/store/useConstantStore";
 import { Tag } from "antd";
 
 interface TagPriority {
@@ -6,8 +6,8 @@ interface TagPriority {
 }
 
 const TagPriority = ({ id }: TagPriority) => {
-  const priorityMap = getConfigStore((s) => s.priorityMap);
-  const priority = priorityMap[id] ?? priorityMap[2];
+  const priorityMap = useConstantStore((s) => s.priorityMap);
+  const priority = priorityMap[id] ?? priorityMap[1];
 
   return (
     <Tag

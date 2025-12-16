@@ -1,0 +1,30 @@
+{
+  "data": {
+    "lightColors": {
+      "primary": "#F472B6",
+      "background": "#FFF7FB",
+      "sidebarBg": "#FDECF4",
+      "sidebarBorder": "#FBCFE8",
+      "text": "#3F1D2E",
+      "textSecondary": "#7C4A61",
+      "menuHover": "#FBCFE8",
+      "menuActive": "#F9A8D4",
+      "cardBg": "#FFF0F6",
+      "border": "#FBCFE8",
+      "headerBg": "#FFF7FB"
+    },
+    "darkColors": {
+      "primary": "#5B8CFF",
+      "background": "#0F172A",
+      "sidebarBg": "#111C36",
+      "sidebarBorder": "#1E2A4A",
+      "text": "#E5E7EB",
+      "textSecondary": "#9CA3AF",
+      "menuHover": "#1E2A4A",
+      "menuActive": "#1F3A8A",
+      "cardBg": "#111827",
+      "border": "#24304F",
+      "headerBg": "#0B1224"
+    }
+  }
+}

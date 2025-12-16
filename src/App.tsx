@@ -1,59 +1,25 @@
 import { RouterProvider } from "react-router-dom";
-import { router } from "./router/AppRouter.tsx";
-import { ConfigProvider, theme } from "antd";
-import { GetTheme } from "./hooks/useTheme.ts";
-import Loading from "./components/loading/Loading.tsx";
-import { useConfig } from "./config/useConfig.tsx";
-import { ThemeProvider } from "./providers/ThemeProvider.tsx";
-import { useAuth } from "./auth/useAuth.ts";
+import { getRouter } from "./router";
+import { useConstantsQuery } from "./api/constants";
+import Loading from "./components/loading/Loading";
+import { useConstantStore } from "./store/useConstantStore";
 import { useEffect } from "react";
 
-const { defaultAlgorithm, darkAlgorithm } = theme;
-
 function App() {
-  return (
-    <ThemeProvider>
-      <AppContent />
-    </ThemeProvider>
-  );
-}
-
-const AppContent = () => {
-  const { mode, palette } = GetTheme();
-  const { loading, hasError } = useConfig();
-  const { me, loading: authLoading } = useAuth();
+  const { data, isLoading } = useConstantsQuery();
+  const setData = useConstantStore((s) => s.setData);
 
   useEffect(() => {
-    document.body.style.backgroundColor = palette.background;
-    document.body.style.color = palette.text;
-  }, [palette]);
+    if (data) {
+      setData(data);
+    }
+  }, [data, setData]);
 
-  if (loading || !me?.isAuthenticated || authLoading || hasError) {
+  if (isLoading) {
     return <Loading />;
   }
 
-  return (
-    <ConfigProvider
-      theme={{
-        algorithm: mode === "light" ? defaultAlgorithm : darkAlgorithm,
-        token: {
-          colorPrimary: palette.primary,
-          colorBgBase: palette.background,
-          colorBgLayout: palette.background,
-          colorBgContainer: palette.cardBg,
-          colorBgElevated: palette.headerBg,
-          colorText: palette.text,
-          colorTextSecondary: palette.textSecondary,
-          colorBorder: palette.border,
-          colorLink: palette.primary,
-          controlItemBgActive: palette.menuActive,
-          borderRadius: 10,
-        },
-      }}
-    >
-      <RouterProvider router={router} />
-    </ConfigProvider>
-  );
-};
+  return <RouterProvider router={getRouter()} />;
+}
 
 export default App;

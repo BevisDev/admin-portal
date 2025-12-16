@@ -1,5 +1,6 @@
-import { hasPermission, hasRole, isSuperAdmin } from "@/auth/auth";
+import { hasPermission, isAuthenticated, isSuperAdmin } from "@/utils/auth";
 import { Button } from "antd";
+import { Navigate } from "react-router-dom";
 
 interface ProtectedButtonProps {
   permissions?: string | string[];
@@ -15,16 +16,15 @@ interface ProtectedButtonProps {
 
 const ProtectedButton = ({
   permissions,
-  roles,
   children,
   ...props
 }: ProtectedButtonProps) => {
   try {
-    if (isSuperAdmin()) {
-      return <Button {...props}>{children}</Button>;
+    if (!isAuthenticated) {
+      return <Navigate to="/login" replace />;
     }
 
-    if (roles && hasRole(roles)) {
+    if (isSuperAdmin()) {
       return <Button {...props}>{children}</Button>;
     }
 

@@ -2,12 +2,17 @@ import type { Task } from "@/types/todo/Board";
 import { CalendarOutlined } from "@ant-design/icons";
 import { Card, Flex, Space } from "antd";
 import TagPriority from "./TagPriority";
+import { formatDate } from "@/utils/date";
+import { useState } from "react";
+import ModalTask from "./ModalTask";
 
 interface TaskCardProps {
   task: Task;
 }
 
 const TaskCard = ({ task }: TaskCardProps) => {
+  const [open, setOpen] = useState<boolean>(false);
+
   return (
     <Card
       size="small"
@@ -16,7 +21,23 @@ const TaskCard = ({ task }: TaskCardProps) => {
         marginBottom: 12,
       }}
     >
-      <h4 style={{ marginBottom: 6, fontWeight: 600 }}>{task.title}</h4>
+      <h4
+        className="hover:text-blue-500"
+        style={{
+          marginBottom: 6,
+          fontWeight: 600,
+          cursor: "pointer",
+          transition: "color 0.2s",
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen(true);
+        }}
+      >
+        {task.title}
+      </h4>
+
+      {open && <ModalTask task={task} open={open} setOpen={setOpen} />}
 
       {task.description && (
         <p
@@ -42,44 +63,12 @@ const TaskCard = ({ task }: TaskCardProps) => {
         <Space>
           <CalendarOutlined />
           <span style={{ fontSize: 13 }}>
-            {task.dueDate}
-            {/* {task.dueDate ? dayjs(task.dueDate).format("DD MMM") : "-"} */}
+            {task.dueDate ? formatDate(task.dueDate, "DD MMM") : "-"}
           </span>
         </Space>
 
         <TagPriority id={task.priority} />
-        {/* <TaskProgress percent={task.progress ?? 0} /> */}
       </Flex>
-
-      {/* Footer */}
-      {/* <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Avatar.Group maxCount={3}>
-          {task.assignees.map((uid) => {
-            const u = userMap[uid];
-            const bg = "#6C5CE7";
-            return (
-              <Avatar key={uid} style={{ background: bg }}>
-                {u.initials}
-              </Avatar>
-            );
-          })}
-        </Avatar.Group>
-
-        <Space size={16} style={{ color: "#94a3b8" }}>
-          <span>
-            <EyeOutlined /> {task.views}
-          </span>
-          <span>
-            <MessageOutlined /> {task.comments}
-          </span>
-        </Space>
-      </div> */}
     </Card>
   );
 };
