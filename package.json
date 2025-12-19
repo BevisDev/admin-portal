@@ -21,8 +21,8 @@
     "antd": "^6.1.1",
     "axios": "^1.13.2",
     "dayjs": "^1.11.19",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "react-router-dom": "^7.9.5",
     "tailwindcss": "^4.1.18",
     "zustand": "^5.0.8"
