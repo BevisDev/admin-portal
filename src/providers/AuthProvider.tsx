@@ -18,9 +18,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // LOADING
   if (isLoading) return <Loading />;
 
-  // LOGIN
-  if (!data || !data.isAuthenticated) return <Loading />;
-
   return children;
 };
 

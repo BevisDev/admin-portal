@@ -1,5 +1,5 @@
 export const API = {
-  me: "/mock/get-me.json",
+  me: "/mock/auth/get-me.json",
   appConfig: "/mock/config/app_config.json",
   menu: "/mock/menu/menu.json",
   users: "/mock/accessControl/users.json",

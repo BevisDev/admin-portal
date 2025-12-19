@@ -2,6 +2,7 @@ import MSButton from "@/components/button/MSButton";
 import { useMeStore } from "@/store/useMeStore";
 import { Card, Typography } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
+import bgLogin from "@/assets/background/bg-login.jpg";
 
 const { Title } = Typography;
 
@@ -29,14 +30,32 @@ const LoginPage = () => {
         alignItems: "center",
         justifyContent: "center",
         background: "#f5f5f5",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        backgroundImage: `url(${bgLogin})`,
       }}
     >
-      <Card style={{ width: 360 }}>
-        <Title level={3} style={{ textAlign: "center" }}>
-          Đăng nhập
-        </Title>
+      <Card
+        style={{
+          width: 360,
+          borderRadius: 12,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+            alignItems: "stretch",
+          }}
+        >
+          <Title level={3} style={{ textAlign: "center", marginBottom: 0 }}>
+            Đăng nhập
+          </Title>
 
-        <MSButton onClick={handleClick} />
+          <MSButton onClick={handleClick} />
+        </div>
       </Card>
     </div>
   );

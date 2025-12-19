@@ -7,6 +7,7 @@ interface MSButtonProps {
 const MSButton = ({ onClick }: MSButtonProps) => {
   return (
     <Button
+      block
       size="large"
       style={{
         display: "flex",

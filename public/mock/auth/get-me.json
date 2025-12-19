@@ -6,7 +6,7 @@
       "email": "dev@example.com"
     },
     "isSuperAdmin": false,
-    "isAuthenticated": true,
+    "isAuthenticated": false,
     "roles": ["user"],
     "permissions": [
       "menu.users",
