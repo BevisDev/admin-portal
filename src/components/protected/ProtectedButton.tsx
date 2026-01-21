@@ -20,8 +20,8 @@ const ProtectedButton = ({
   ...props
 }: ProtectedButtonProps) => {
   try {
-    if (!isAuthenticated) {
-      return <Navigate to="/login" replace />;
+    if (!isAuthenticated()) {
+      return null;
     }
 
     if (isSuperAdmin()) {

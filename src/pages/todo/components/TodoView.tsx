@@ -1,75 +1,312 @@
 import type { Task } from "@/types/todo/Board";
-import { Checkbox, List, Space, Tag } from "antd";
+import {
+  Avatar,
+  Card,
+  Checkbox,
+  Flex,
+  Space,
+  Tag,
+  Typography,
+} from "antd";
+import {
+  CalendarOutlined,
+  CommentOutlined,
+  EyeOutlined,
+} from "@ant-design/icons";
+import TagPriority from "./TagPriority";
+import TaskProgress from "./TaskProgress";
+import { formatDate } from "@/utils/date";
+import useTheme from "@/hooks/useTheme";
+import { useState, useMemo } from "react";
+import ModalTask from "./ModalTask";
+import dayjs, { type Dayjs } from "dayjs";
+
+const { Text } = Typography;
 
 interface TodoViewProps {
   tasks: Task[];
+  filterDateRange?: [Dayjs | null, Dayjs | null] | null;
 }
 
-const TodoView = ({ tasks }: TodoViewProps) => {
-  return (
-    <List
-      itemLayout="horizontal"
-      dataSource={tasks}
-      renderItem={(task) => {
-        const isDone = task.progress === 100;
+// Helper to get status color based on columnId
+const getStatusColor = (columnId: number): string => {
+  switch (columnId) {
+    case 1:
+      return "default"; // Planned
+    case 2:
+      return "processing"; // In Progress
+    case 3:
+      return "success"; // Done
+    default:
+      return "default";
+  }
+};
 
+const getStatusText = (columnId: number): string => {
+  switch (columnId) {
+    case 1:
+      return "Planned";
+    case 2:
+      return "In Progress";
+    case 3:
+      return "Done";
+    default:
+      return "Unknown";
+  }
+};
+
+const TodoView = ({ tasks, filterDateRange }: TodoViewProps) => {
+  const { palette } = useTheme();
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  // Filter tasks: if filterDateRange is set, use it; otherwise show today's tasks
+  const filteredTasks = useMemo(() => {
+    if (
+      filterDateRange &&
+      filterDateRange[0] !== null &&
+      filterDateRange[1] !== null
+    ) {
+      // If user has selected a date range, show tasks in that range
+      const startDate = filterDateRange[0].startOf("day");
+      const endDate = filterDateRange[1].endOf("day");
+      return tasks.filter((task) => {
+        if (!task.dueDate) return false;
+        const taskDate = dayjs(task.dueDate).startOf("day");
         return (
-          <List.Item
-            style={{
-              padding: "14px 10px",
-              borderBottom: "1px solid #f0f0f0",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            {/* LEFT SIDE */}
-            <Space align="start">
-              {/* Checkbox */}
-              <Checkbox checked={isDone} />
+          (taskDate.isSame(startDate) || taskDate.isAfter(startDate)) &&
+          (taskDate.isSame(endDate) || taskDate.isBefore(endDate))
+        );
+      });
+    }
 
-              {/* Title + Status */}
-              <div>
-                <div
+    // Default: only show tasks with dueDate = today
+    const today = dayjs().startOf("day");
+    return tasks.filter((task) => {
+      if (!task.dueDate) {
+        return false;
+      }
+      const taskDate = dayjs(task.dueDate).startOf("day");
+      return taskDate.isSame(today);
+    });
+  }, [tasks, filterDateRange]);
+
+  const handleTaskClick = (task: Task) => {
+    setSelectedTask(task);
+    setModalOpen(true);
+  };
+
+  if (filteredTasks.length === 0) {
+    let displayText = "";
+    if (
+      filterDateRange &&
+      filterDateRange[0] !== null &&
+      filterDateRange[1] !== null
+    ) {
+      displayText = `từ ${filterDateRange[0].format("DD/MM/YYYY")} đến ${filterDateRange[1].format("DD/MM/YYYY")}`;
+    } else {
+      displayText = `hôm nay (${dayjs().format("DD/MM/YYYY")})`;
+    }
+    return (
+      <div
+        style={{
+          textAlign: "center",
+          padding: "60px 20px",
+          color: palette.textSecondary,
+        }}
+      >
+        <Typography.Text style={{ fontSize: 16 }}>
+          Không có task nào có due date {displayText}
+        </Typography.Text>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(380px, 1fr))",
+          gap: 16,
+        }}
+      >
+        {filteredTasks.map((task) => {
+          const isDone = task.progress === 100;
+          const progress = task.progress ?? 0;
+
+          return (
+            <Card
+              key={task.id}
+              hoverable
+              onClick={() => handleTaskClick(task)}
+              style={{
+                borderRadius: 12,
+                border: `1px solid ${palette.border}`,
+                background: palette.cardBg,
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+              styles={{
+                body: {
+                  padding: 16,
+                },
+              }}
+            >
+              {/* Header: Checkbox + Title */}
+              <Flex align="start" gap={12} style={{ marginBottom: 12 }}>
+                <Checkbox
+                  checked={isDone}
+                  style={{ marginTop: 2 }}
+                  onClick={(e) => e.stopPropagation()}
+                />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <Text
+                    strong
+                    style={{
+                      fontSize: 15,
+                      color: palette.text,
+                      textDecoration: isDone ? "line-through" : "none",
+                      opacity: isDone ? 0.6 : 1,
+                      display: "block",
+                      wordBreak: "break-word",
+                    }}
+                  >
+                    {task.title}
+                  </Text>
+                </div>
+              </Flex>
+
+              {/* Description */}
+              {task.description && (
+                <Text
                   style={{
-                    fontWeight: 500,
-                    // color: isDone ? "#9ca3af" : "#111",
-                    textDecoration: isDone ? "line-through" : "none",
+                    color: palette.textSecondary,
+                    fontSize: 13,
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    marginBottom: 12,
+                    lineHeight: 1.5,
                   }}
                 >
-                  {task.title}
+                  {task.description}
+                </Text>
+              )}
+
+              {/* Tags: Status + Priority */}
+              <Flex gap={8} wrap="wrap" style={{ marginBottom: 12 }}>
+                <Tag
+                  color={getStatusColor(task.columnId)}
+                  style={{ borderRadius: 6, margin: 0 }}
+                >
+                  {getStatusText(task.columnId)}
+                </Tag>
+                {task.priority && <TagPriority id={task.priority} />}
+              </Flex>
+
+              {/* Progress */}
+              {progress > 0 && (
+                <div style={{ marginBottom: 12 }}>
+                  <TaskProgress percent={progress} />
                 </div>
+              )}
 
-                <Space style={{ marginTop: 4 }}>
-                  {/* Status tag (map columnId → status text if needed) */}
-                  <Tag color="blue" style={{ borderRadius: 999 }}>
-                    {isDone ? "Done" : "In Progress"}
-                  </Tag>
-
-                  {/* Due date */}
+              {/* Footer: Due Date + Metadata */}
+              <Flex justify="space-between" align="center" wrap="wrap" gap={8}>
+                <Space size="small">
                   {task.dueDate && (
-                    <span style={{ color: "#6b7280", fontSize: 13 }}>
-                      {/* {dayjs(task.dueDate).format("DD MMM")} */}
-                    </span>
+                    <Space size={4} style={{ color: palette.textSecondary }}>
+                      <CalendarOutlined style={{ fontSize: 12 }} />
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          color: palette.textSecondary,
+                        }}
+                      >
+                        {formatDate(task.dueDate, "DD MMM YYYY")}
+                      </Text>
+                    </Space>
                   )}
                 </Space>
-              </div>
-            </Space>
 
-            {/* RIGHT SIDE */}
-            {/* <Avatar.Group maxCount={3}>
-              {task.assignees.map((uid) => {
-                const u = userMap[uid];
-                return (
-                  <Avatar key={uid} style={{ background: "#6C5CE7" }}>
-                    {u.initials}
-                  </Avatar>
-                );
-              })}
-            </Avatar.Group> */}
-          </List.Item>
-        );
-      }}
-    />
+                <Space size="middle">
+                  {task.comments !== undefined && task.comments > 0 && (
+                    <Space size={4} style={{ color: palette.textSecondary }}>
+                      <CommentOutlined style={{ fontSize: 12 }} />
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          color: palette.textSecondary,
+                        }}
+                      >
+                        {task.comments}
+                      </Text>
+                    </Space>
+                  )}
+
+                  {task.views !== undefined && task.views > 0 && (
+                    <Space size={4} style={{ color: palette.textSecondary }}>
+                      <EyeOutlined style={{ fontSize: 12 }} />
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          color: palette.textSecondary,
+                        }}
+                      >
+                        {task.views}
+                      </Text>
+                    </Space>
+                  )}
+                </Space>
+              </Flex>
+
+              {/* Assignees */}
+              {task.assignees && task.assignees.length > 0 && (
+                <div style={{ marginTop: 12 }}>
+                  <Avatar.Group
+                    maxCount={3}
+                    maxStyle={{
+                      color: palette.text,
+                      backgroundColor: palette.border,
+                    }}
+                  >
+                    {task.assignees.slice(0, 3).map((assignee, idx) => (
+                      <Avatar
+                        key={idx}
+                        style={{
+                          backgroundColor: [
+                            "#00B894",
+                            "#6C5CE7",
+                            "#0984E3",
+                            "#FDCB6E",
+                            "#E17055",
+                          ][idx % 5],
+                        }}
+                      >
+                        {typeof assignee === "string"
+                          ? assignee.slice(0, 2).toUpperCase()
+                          : String(assignee).slice(0, 2)}
+                      </Avatar>
+                    ))}
+                  </Avatar.Group>
+                </div>
+              )}
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* Modal Task Detail */}
+      {selectedTask && (
+        <ModalTask
+          task={selectedTask}
+          open={modalOpen}
+          setOpen={setModalOpen}
+        />
+      )}
+    </>
   );
 };
 

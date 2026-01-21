@@ -18,21 +18,18 @@ import {
 import TaskCard from "./TaskCard";
 import DroppableItem from "@/components/dnd/DroppableItem";
 import { Flex } from "antd";
+import dayjs, { type Dayjs } from "dayjs";
+import { useMoveTaskMutation } from "@/api/todo";
 
 interface BoardViewProps {
   tasks: Task[];
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   cols: Column[];
-  onMoveTask?: (
-    taskId: number,
-    fromColId: number,
-    toColId: number,
-    newIdx: number
-  ) => void;
+  filterDateRange?: [Dayjs | null, Dayjs | null] | null;
 }
 
-const BoardView = ({ tasks, setTasks, cols, onMoveTask }: BoardViewProps) => {
+const BoardView = ({ tasks, cols, filterDateRange }: BoardViewProps) => {
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const moveTaskMutation = useMoveTaskMutation();
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -40,9 +37,53 @@ const BoardView = ({ tasks, setTasks, cols, onMoveTask }: BoardViewProps) => {
     })
   );
 
+  // Filter tasks: if filterDateRange is set, use it; otherwise use 2 weeks range
+  const filteredTasks = useMemo(() => {
+    if (!tasks || tasks.length === 0) return [];
+
+    // If user has selected a date range filter, don't apply default date range filter
+    // (tasks are already filtered by date range in parent component)
+    if (
+      filterDateRange &&
+      filterDateRange[0] !== null &&
+      filterDateRange[1] !== null
+    ) {
+      return tasks;
+    }
+
+    // Default: show tasks from 2 weeks ago to 2 weeks later (4 weeks total)
+    const today = dayjs().startOf("day");
+    const twoWeeksAgo = today.subtract(2, "weeks").startOf("day");
+    const twoWeeksLater = today.add(2, "weeks").endOf("day");
+
+    const filtered = tasks.filter((task) => {
+      // If task has no dueDate, don't show it
+      if (!task.dueDate) {
+        return false;
+      }
+
+      const taskDate = dayjs(task.dueDate).startOf("day");
+
+      // Show task if dueDate is within 2 weeks ago to 2 weeks later (inclusive)
+      const isAfterStart =
+        taskDate.isSame(twoWeeksAgo) || taskDate.isAfter(twoWeeksAgo);
+      const isBeforeEnd =
+        taskDate.isSame(twoWeeksLater) || taskDate.isBefore(twoWeeksLater);
+
+      return isAfterStart && isBeforeEnd;
+    });
+
+    // If no tasks match filter, show all tasks with dueDate (fallback)
+    if (filtered.length === 0) {
+      return tasks.filter((task) => task.dueDate);
+    }
+
+    return filtered;
+  }, [tasks, filterDateRange]);
+
   const tasksByColumn = useMemo(() => {
     const map: Record<number, Task[]> = {};
-    tasks.forEach((t) => {
+    filteredTasks.forEach((t) => {
       if (!map[t.columnId]) {
         map[t.columnId] = [];
       }
@@ -51,14 +92,15 @@ const BoardView = ({ tasks, setTasks, cols, onMoveTask }: BoardViewProps) => {
     });
 
     return map;
-  }, [tasks]);
+  }, [filteredTasks]);
 
   const handleDragEnd = useCallback(
-    (event: DragEndEvent) => {
+    async (event: DragEndEvent) => {
       const { active, over } = event;
       if (!over) return;
 
       const taskId = Number(active.id);
+      // Find task in all tasks (not filtered)
       const activeTask = tasks.find((t) => t.id === taskId);
       if (!activeTask) return;
 
@@ -68,10 +110,17 @@ const BoardView = ({ tasks, setTasks, cols, onMoveTask }: BoardViewProps) => {
       if (overIdStr.startsWith("drop")) {
         const newColId = Number(overIdStr.replace("drop-", ""));
 
-        setTasks((prev) => [
-          ...prev.filter((t) => t.id !== taskId),
-          { ...activeTask, columnId: newColId },
-        ]);
+        // Call API to move task
+        try {
+          await moveTaskMutation.mutateAsync({
+            taskId,
+            fromColId: activeTask.columnId,
+            toColId: newColId,
+            newIndex: 0,
+          });
+        } catch (error) {
+          console.error("Failed to move task:", error);
+        }
 
         setActiveTask(null);
         return;
@@ -79,7 +128,7 @@ const BoardView = ({ tasks, setTasks, cols, onMoveTask }: BoardViewProps) => {
 
       // DROP ONTO A TASK
       const overId = Number(overIdStr);
-      const overTask = tasks.find((t) => t.id === overId);
+      const overTask = filteredTasks.find((t) => t.id === overId);
       if (!overTask) return;
 
       const fromColId = activeTask.columnId;
@@ -87,52 +136,59 @@ const BoardView = ({ tasks, setTasks, cols, onMoveTask }: BoardViewProps) => {
 
       // REORDER INSIDE SAME COLUMN
       if (fromColId === toColId) {
-        const columnTasks = tasks.filter((t) => t.columnId === fromColId);
-        const oldIndex = columnTasks.findIndex((t) => t.id === taskId);
-        const newIndex = columnTasks.findIndex((t) => t.id === overId);
+        // Get all tasks in this column (from all tasks)
+        const allColumnTasks = tasks.filter((t) => t.columnId === fromColId);
+        const oldIndex = allColumnTasks.findIndex((t) => t.id === taskId);
+        const newIndex = allColumnTasks.findIndex((t) => t.id === overId);
 
-        const reordered = arrayMove(columnTasks, oldIndex, newIndex);
+        if (oldIndex === -1 || newIndex === -1) return;
 
-        setTasks((prev) => [
-          ...prev.filter((t) => t.columnId !== fromColId),
-          ...reordered,
-        ]);
+        // Call API to reorder task
+        try {
+          await moveTaskMutation.mutateAsync({
+            taskId,
+            fromColId,
+            toColId,
+            newIndex,
+          });
+        } catch (error) {
+          console.error("Failed to reorder task:", error);
+        }
 
         setActiveTask(null);
         return;
       }
 
       // MOVE TO ANOTHER COLUMN
-      const fromColumnTasks = tasks.filter((t) => t.columnId === fromColId);
+      // Find the index in the filtered view to determine insert position
+      const filteredToColumnTasks = filteredTasks.filter((t) => t.columnId === toColId);
+      const insertIndexInFiltered = filteredToColumnTasks.findIndex((t) => t.id === overId);
+
+      // Find corresponding task in all tasks
       const toColumnTasks = tasks.filter((t) => t.columnId === toColId);
+      let insertIndex = 0;
+      if (insertIndexInFiltered >= 0 && insertIndexInFiltered < filteredToColumnTasks.length) {
+        const targetTaskInFiltered = filteredToColumnTasks[insertIndexInFiltered];
+        insertIndex = toColumnTasks.findIndex((t) => t.id === targetTaskInFiltered.id);
+      }
+      if (insertIndex === -1) insertIndex = toColumnTasks.length;
 
-      // remove from old column
-      const removed = fromColumnTasks.filter((t) => t.id !== taskId);
-
-      // insert into new column (correct index)
-      const insertIndex = toColumnTasks.findIndex((t) => t.id === overId);
-      toColumnTasks.splice(insertIndex, 0, {
-        ...activeTask,
-        columnId: toColId,
-      });
-
-      // merge all back
-      const rebuilt = [
-        ...tasks.filter(
-          (t) => t.columnId !== fromColId && t.columnId !== toColId
-        ),
-        ...removed,
-        ...toColumnTasks,
-      ];
-
-      setTasks(rebuilt);
-      // Gọi API callback
-      onMoveTask?.(taskId, fromColId, toColId, insertIndex);
+      // Call API to move task
+      try {
+        await moveTaskMutation.mutateAsync({
+          taskId,
+          fromColId,
+          toColId,
+          newIndex: insertIndex,
+        });
+      } catch (error) {
+        console.error("Failed to move task:", error);
+      }
 
       // remove task active
       setActiveTask(null);
     },
-    [tasks, setTasks, onMoveTask]
+    [tasks, filteredTasks, moveTaskMutation]
   );
 
   return (
@@ -141,7 +197,7 @@ const BoardView = ({ tasks, setTasks, cols, onMoveTask }: BoardViewProps) => {
       collisionDetection={closestCorners}
       onDragStart={({ active }) => {
         const id = Number(active.id);
-        setActiveTask(tasks.find((t) => t.id === id) ?? null);
+        setActiveTask(filteredTasks.find((t) => t.id === id) ?? null);
       }}
       onDragEnd={handleDragEnd}
       onDragCancel={() => setActiveTask(null)}

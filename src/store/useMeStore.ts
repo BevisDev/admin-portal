@@ -20,5 +20,6 @@ export const useMeStore = create<MeStore>((set) => ({
   logout: () =>
     set({
       me: null,
+      init: false,
     }),
 }));

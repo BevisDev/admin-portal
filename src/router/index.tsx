@@ -40,9 +40,10 @@ export const getRouter = () => {
 };
 
 export const buildRoutes = (items: RouteItem[]): RouteObject[] => {
-  return items.flatMap((item) => {
-    const routes: RouteObject[] = [];
+  const routes: RouteObject[] = [];
 
+  // Build routes from Routes config
+  items.forEach((item) => {
     const Page = PageMap[item.path] as ComponentType | undefined;
     if (Page) {
       routes.push({
@@ -57,7 +58,22 @@ export const buildRoutes = (items: RouteItem[]): RouteObject[] => {
     if (item.children) {
       routes.push(...buildRoutes(item.children));
     }
-
-    return routes;
   });
+
+  // Add additional routes from PageMap that are not in Routes config
+  Object.entries(PageMap).forEach(([path, Page]) => {
+    // Skip if already added from Routes config
+    if (!routes.some((r) => r.path === path)) {
+      routes.push({
+        path,
+        element: (
+          <ProtectedPage>
+            <Page />
+          </ProtectedPage>
+        ),
+      });
+    }
+  });
+
+  return routes;
 };
