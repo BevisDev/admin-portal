@@ -14,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 import { useConstantStore } from "@/store/useConstantStore";
 import useTheme from "@/hooks/useTheme";
 import dayjs from "dayjs";
-import { useState } from "react";
 import type { Task } from "@/types/todo/Board";
 import { useTodoQuery, useCreateTaskMutation } from "@/api/todo";
 
@@ -260,19 +259,19 @@ const CreateTaskPage = () => {
                             >
                                 Cancel
                             </Button>
-                                   <Button
-                                       type="primary"
-                                       htmlType="submit"
-                                       size="large"
-                                       loading={createTaskMutation.isPending}
-                                       style={{
-                                           background: palette.primary,
-                                           borderColor: palette.primary,
-                                           borderRadius: 8,
-                                       }}
-                                   >
-                                       Create Task
-                                   </Button>
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                size="large"
+                                loading={createTaskMutation.isPending}
+                                style={{
+                                    background: palette.primary,
+                                    borderColor: palette.primary,
+                                    borderRadius: 8,
+                                }}
+                            >
+                                Create Task
+                            </Button>
                         </Space>
                     </Form.Item>
                 </Form>

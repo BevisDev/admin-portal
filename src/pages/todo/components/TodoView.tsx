@@ -20,6 +20,7 @@ import useTheme from "@/hooks/useTheme";
 import { useState, useMemo } from "react";
 import ModalTask from "./ModalTask";
 import dayjs, { type Dayjs } from "dayjs";
+import { useTodoQuery, useUpdateTaskMutation } from "@/api/todo";
 
 const { Text } = Typography;
 
@@ -55,10 +56,19 @@ const getStatusText = (columnId: number): string => {
   }
 };
 
+// Column id for Done (default 3) and Planned (default 1)
+const COL_DONE = 3;
+const COL_PLANNED = 1;
+
 const TodoView = ({ tasks, filterDateRange }: TodoViewProps) => {
   const { palette } = useTheme();
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const updateTaskMutation = useUpdateTaskMutation();
+  const { data: todoData } = useTodoQuery();
+  const columns = todoData?.columns ?? [];
+  const doneColId = columns.find((c) => c.title === "Done")?.id ?? COL_DONE;
+  const plannedColId = columns.find((c) => c.title === "Planned")?.id ?? COL_PLANNED;
 
   // Filter tasks: if filterDateRange is set, use it; otherwise show today's tasks
   const filteredTasks = useMemo(() => {
@@ -94,6 +104,23 @@ const TodoView = ({ tasks, filterDateRange }: TodoViewProps) => {
   const handleTaskClick = (task: Task) => {
     setSelectedTask(task);
     setModalOpen(true);
+  };
+
+  const handleCheckboxChange = async (task: Task, checked: boolean) => {
+    try {
+      await updateTaskMutation.mutateAsync({
+        taskId: task.id,
+        taskData: {
+          progress: checked ? 100 : 0,
+          columnId: checked ? doneColId : plannedColId,
+          status: checked
+            ? (columns.find((c) => c.id === doneColId)?.title ?? "Done")
+            : (columns.find((c) => c.id === plannedColId)?.title ?? "Planned"),
+        },
+      });
+    } catch {
+      // Error already handled by mutation / can show toast
+    }
   };
 
   if (filteredTasks.length === 0) {
@@ -157,8 +184,10 @@ const TodoView = ({ tasks, filterDateRange }: TodoViewProps) => {
               <Flex align="start" gap={12} style={{ marginBottom: 12 }}>
                 <Checkbox
                   checked={isDone}
+                  disabled={updateTaskMutation.isPending}
                   style={{ marginTop: 2 }}
                   onClick={(e) => e.stopPropagation()}
+                  onChange={(e) => handleCheckboxChange(task, e.target.checked)}
                 />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <Text

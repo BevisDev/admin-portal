@@ -5,8 +5,11 @@ import {
   Dropdown,
   Flex,
   Input,
+  Modal,
   Select,
   Space,
+  message,
+  Spin,
   Tabs,
 } from "antd";
 
@@ -26,6 +29,7 @@ import { useTodoQuery } from "@/api/todo";
 import { useNavigate } from "react-router-dom";
 import useTheme from "@/hooks/useTheme";
 import dayjs, { type Dayjs } from "dayjs";
+import { useConstantStore } from "@/store/useConstantStore";
 
 const ToDoPage = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -35,8 +39,13 @@ const ToDoPage = () => {
   const [filterStatus, setFilterStatus] = useState<number | undefined>(
     undefined
   );
+  const [filterPriority, setFilterPriority] = useState<number | undefined>(
+    undefined
+  );
+  const [shareModalOpen, setShareModalOpen] = useState(false);
   const navigate = useNavigate();
   const { palette } = useTheme();
+  const { data: constants } = useConstantStore();
 
   // Build query options for API call
   const queryOptions = {
@@ -50,6 +59,7 @@ const ToDoPage = () => {
         ? filterDateRange[1].format("YYYY-MM-DD")
         : undefined,
     status: filterStatus,
+    priority: filterPriority,
   };
 
   // Call API with filters - API will handle filtering
@@ -69,15 +79,28 @@ const ToDoPage = () => {
     (filterDateRange !== null &&
       filterDateRange[0] !== null &&
       filterDateRange[1] !== null) ||
-    filterStatus !== undefined;
+    filterStatus !== undefined ||
+    filterPriority !== undefined;
 
   // Clear all filters
   const handleClearFilters = () => {
     setFilterDateRange(null);
     setFilterStatus(undefined);
+    setFilterPriority(undefined);
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  const shareUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}${window.location.pathname}`
+      : "";
+
+  if (isLoading) {
+    return (
+      <Flex justify="center" align="center" style={{ minHeight: 280 }}>
+        <Spin size="large" />
+      </Flex>
+    );
+  }
 
   return (
     <div>
@@ -164,6 +187,32 @@ const ToDoPage = () => {
                   />
                 </div>
 
+                <div>
+                  <div
+                    style={{
+                      marginBottom: 8,
+                      fontSize: 14,
+                      fontWeight: 500,
+                      color: palette.text,
+                    }}
+                  >
+                    Filter by Priority
+                  </div>
+                  <Select
+                    style={{ width: "100%" }}
+                    value={filterPriority}
+                    onChange={(value) => setFilterPriority(value)}
+                    placeholder="Select priority"
+                    allowClear
+                    options={
+                      constants?.priorities?.map((p) => ({
+                        label: p.label,
+                        value: p.id,
+                      })) ?? []
+                    }
+                  />
+                </div>
+
                 {hasActiveFilters && (
                   <Button
                     type="link"
@@ -185,7 +234,12 @@ const ToDoPage = () => {
             {hasActiveFilters && " *"}
           </Button>
         </Dropdown>
-        <Button icon={<ShareAltOutlined />}>Share</Button>
+        <Button
+          icon={<ShareAltOutlined />}
+          onClick={() => setShareModalOpen(true)}
+        >
+          Share
+        </Button>
 
         <Button
           type="primary"
@@ -214,6 +268,59 @@ const ToDoPage = () => {
 
         <Button>Add assignee</Button>
       </Flex>
+
+      {/* Share Modal */}
+      <Modal
+        title="Share"
+        open={shareModalOpen}
+        onCancel={() => setShareModalOpen(false)}
+        footer={null}
+        styles={{
+          content: {
+            background: palette.cardBg,
+            border: `1px solid ${palette.border}`,
+          },
+          header: {
+            borderBottom: `1px solid ${palette.border}`,
+            color: palette.text,
+          },
+        }}
+      >
+        <Space direction="vertical" style={{ width: "100%" }} size="middle">
+          <div
+            style={{
+              fontSize: 14,
+              color: palette.textSecondary,
+            }}
+          >
+            Share this board with others via link:
+          </div>
+          <Input.TextArea
+            readOnly
+            value={shareUrl}
+            rows={2}
+            style={{
+              background: palette.background,
+              color: palette.text,
+              borderRadius: 8,
+            }}
+          />
+          <Button
+            type="primary"
+            onClick={() => {
+              navigator.clipboard?.writeText(shareUrl).then(() => {
+                message.success("Link copied to clipboard");
+              });
+            }}
+            style={{
+              background: palette.primary,
+              borderColor: palette.primary,
+            }}
+          >
+            Copy link
+          </Button>
+        </Space>
+      </Modal>
 
       {/* Tabs */}
       <Tabs

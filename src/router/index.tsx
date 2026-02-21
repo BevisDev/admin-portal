@@ -5,10 +5,10 @@ import ProtectedPage from "@/components/protected/ProtectedPage";
 import type { ComponentType } from "react";
 import LoginPage from "@/pages/auth/LoginPage";
 import DashBoardPage from "@/pages/dashboard";
-import RouteErrorPage from "@/pages/RouteErrorPage";
-import { PageMap } from "@/pages/PageMap";
+import { PageMap } from "@/router/PageMap";
 import { Routes, type RouteItem } from "./routes";
 import ProtectedRoute from "@/components/protected/ProtectedRoute";
+import RouteErrorPage from "./RouteErrorPage";
 
 export const getRouter = () => {
   return createBrowserRouter([
