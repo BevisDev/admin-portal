@@ -4,7 +4,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { API } from "..";
 import type { Todo, Task } from "@/types/todo/Board";
 import { mockTodoService, type TodoQueryParams } from "@/utils/mockService";
-import dayjs, { type Dayjs } from "dayjs";
 
 // Use mock service for now (when backend is ready, switch to real API)
 const USE_MOCK = true;
@@ -32,15 +31,17 @@ export const useTodoQuery = (options?: TodoQueryOptions) => {
       }
 
       // Real API call
+      const queryParams: Record<string, string | number | boolean> = {
+        ...(options?.search ? { search: options.search } : {}),
+        ...(options?.startDate ? { startDate: options.startDate } : {}),
+        ...(options?.endDate ? { endDate: options.endDate } : {}),
+        ...(options?.status !== undefined ? { status: options.status } : {}),
+        ...(options?.priority !== undefined ? { priority: options.priority } : {}),
+      };
+
       return GETQuery<TodoQueryParams, Response<Todo>>({
         url: API.todo,
-        queryParams: {
-          search: options?.search,
-          startDate: options?.startDate,
-          endDate: options?.endDate,
-          status: options?.status,
-          priority: options?.priority,
-        },
+        queryParams,
       });
     },
     select: (res) => res.data,

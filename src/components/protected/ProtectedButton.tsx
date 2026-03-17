@@ -1,6 +1,5 @@
 import { hasPermission, isAuthenticated, isSuperAdmin } from "@/utils/auth";
 import { Button } from "antd";
-import { Navigate } from "react-router-dom";
 
 interface ProtectedButtonProps {
   permissions?: string | string[];

@@ -81,7 +81,7 @@ const ModalAddTask = ({ colId, open, onClose }: ModalAddTaskProps) => {
       footer={null}
       width={480}
       styles={{
-        content: {
+        body: {
           background: palette.cardBg,
           border: `1px solid ${palette.border}`,
         },

@@ -28,7 +28,7 @@ import type { Column } from "@/types/todo/Board";
 import { useTodoQuery } from "@/api/todo";
 import { useNavigate } from "react-router-dom";
 import useTheme from "@/hooks/useTheme";
-import dayjs, { type Dayjs } from "dayjs";
+import type { Dayjs } from "dayjs";
 import { useConstantStore } from "@/store/useConstantStore";
 
 const ToDoPage = () => {
@@ -276,7 +276,7 @@ const ToDoPage = () => {
         onCancel={() => setShareModalOpen(false)}
         footer={null}
         styles={{
-          content: {
+          body: {
             background: palette.cardBg,
             border: `1px solid ${palette.border}`,
           },

@@ -184,12 +184,10 @@ const ModalTask = ({ task, open, setOpen, onDeleted }: ModalTaskProps) => {
         body: {
           background: palette.cardBg,
           border: `1px solid ${palette.border}`,
+          color: palette.text,
         },
         header: {
           borderBottom: `1px solid ${palette.border}`,
-          color: palette.text,
-        },
-        body: {
           color: palette.text,
         },
       }}
