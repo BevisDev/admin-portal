@@ -5,6 +5,7 @@ import TagPriority from "./TagPriority";
 import { formatDate } from "@/utils/date";
 import { useState } from "react";
 import ModalTask from "./ModalTask";
+import useTheme from "@/hooks/useTheme";
 
 interface TaskCardProps {
   task: Task;
@@ -12,6 +13,7 @@ interface TaskCardProps {
 
 const TaskCard = ({ task }: TaskCardProps) => {
   const [open, setOpen] = useState<boolean>(false);
+  const { palette } = useTheme();
 
   return (
     <Card
@@ -19,6 +21,8 @@ const TaskCard = ({ task }: TaskCardProps) => {
       style={{
         borderRadius: 12,
         marginBottom: 12,
+        borderColor: palette.border,
+        background: palette.cardBg,
       }}
     >
       <h4
@@ -28,6 +32,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
           fontWeight: 600,
           cursor: "pointer",
           transition: "color 0.2s",
+          color: palette.text,
         }}
         onClick={(e) => {
           e.stopPropagation();
@@ -42,7 +47,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
       {task.description && (
         <p
           style={{
-            color: "#6b7280",
+            color: palette.textSecondary,
             marginBottom: 10,
             display: "-webkit-box",
             WebkitLineClamp: 2,
@@ -60,7 +65,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
           marginBottom: 10,
         }}
       >
-        <Space>
+        <Space style={{ color: palette.textSecondary }}>
           <CalendarOutlined />
           <span style={{ fontSize: 13 }}>
             {task.dueDate ? formatDate(task.dueDate, "DD MMM") : "-"}

@@ -5,6 +5,7 @@ import TaskCard from "./TaskCard";
 import SortableItem from "@/components/dnd/SortableItem";
 import { useState } from "react";
 import ModalAddTask from "./ModalAddTask";
+import useTheme from "@/hooks/useTheme";
 
 interface ColumnCardProps {
   col: Column;
@@ -13,6 +14,7 @@ interface ColumnCardProps {
 
 const ColumnCard = ({ col, tasks }: ColumnCardProps) => {
   const [openModalTask, setOpenModalTask] = useState<boolean>(false);
+  const { palette } = useTheme();
 
   return (
     <Card
@@ -21,8 +23,10 @@ const ColumnCard = ({ col, tasks }: ColumnCardProps) => {
           style={{
             display: "flex",
             justifyContent: "space-between",
+            alignItems: "center",
             fontWeight: 600,
             fontSize: 15,
+            color: palette.text,
           }}
         >
           <span>
@@ -33,7 +37,7 @@ const ColumnCard = ({ col, tasks }: ColumnCardProps) => {
               style={{
                 cursor: "pointer",
                 fontSize: 16,
-                color: "#a5b4fc",
+                color: palette.primary,
               }}
               onClick={(e) => {
                 e.stopPropagation();
@@ -53,7 +57,8 @@ const ColumnCard = ({ col, tasks }: ColumnCardProps) => {
         width: 320,
         minWidth: 320,
         borderRadius: 16,
-        borderColor: "#EEE",
+        borderColor: palette.border,
+        background: palette.cardBg,
       }}
       styles={{
         body: {

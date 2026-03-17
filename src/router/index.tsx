@@ -5,10 +5,10 @@ import ProtectedPage from "@/components/protected/ProtectedPage";
 import type { ComponentType } from "react";
 import LoginPage from "@/pages/auth/LoginPage";
 import DashBoardPage from "@/pages/dashboard";
-import RouteErrorPage from "@/pages/RouteErrorPage";
-import { PageMap } from "@/pages/PageMap";
+import { PageMap } from "@/router/PageMap";
 import { Routes, type RouteItem } from "./routes";
 import ProtectedRoute from "@/components/protected/ProtectedRoute";
+import RouteErrorPage from "./RouteErrorPage";
 
 export const getRouter = () => {
   return createBrowserRouter([
@@ -40,9 +40,10 @@ export const getRouter = () => {
 };
 
 export const buildRoutes = (items: RouteItem[]): RouteObject[] => {
-  return items.flatMap((item) => {
-    const routes: RouteObject[] = [];
+  const routes: RouteObject[] = [];
 
+  // Build routes from Routes config
+  items.forEach((item) => {
     const Page = PageMap[item.path] as ComponentType | undefined;
     if (Page) {
       routes.push({
@@ -57,7 +58,22 @@ export const buildRoutes = (items: RouteItem[]): RouteObject[] => {
     if (item.children) {
       routes.push(...buildRoutes(item.children));
     }
-
-    return routes;
   });
+
+  // Add additional routes from PageMap that are not in Routes config
+  Object.entries(PageMap).forEach(([path, Page]) => {
+    // Skip if already added from Routes config
+    if (!routes.some((r) => r.path === path)) {
+      routes.push({
+        path,
+        element: (
+          <ProtectedPage>
+            <Page />
+          </ProtectedPage>
+        ),
+      });
+    }
+  });
+
+  return routes;
 };

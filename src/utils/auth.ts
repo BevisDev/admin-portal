@@ -11,15 +11,19 @@ export const hasAccessRoute = (
 ): boolean => {
   if (isSuperAdmin()) return true;
 
+  // Nếu route có permissions, kiểm tra permissions
   if (item.permissions) {
     return normalizePerms(item.permissions).some((p) => userPerms.includes(p));
   }
 
+  // Nếu route có children, kiểm tra xem có child nào accessible không
   if (item.children) {
     return item.children.some((child) => hasAccessRoute(child, userPerms));
   }
 
-  return false;
+  // Nếu route không có permissions và không có children
+  // Cho phép truy cập nếu đã authenticated (route public cho authenticated users)
+  return isAuthenticated();
 };
 
 export const isAuthenticated = () => {

@@ -1,19 +1,20 @@
-# Stage 1: Build app
-FROM node:24.11.1-alpine AS build
+FROM node:24.14.0-alpine AS builder
 
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN npm install
+
+RUN npm ci
 
 COPY . .
+
 RUN npm run build
 
-
-# Stage 2: Run with Nginx
 FROM nginx:stable-alpine
 
-COPY --from=build /app/dist /usr/share/nginx/html
+RUN rm -rf /usr/share/nginx/html/*
+
+COPY --from=builder /app/dist /usr/share/nginx/html
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

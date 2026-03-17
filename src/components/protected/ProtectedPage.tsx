@@ -2,12 +2,29 @@ import { hasPermission, isAuthenticated, isSuperAdmin } from "@/utils/auth";
 import { Typography } from "antd";
 import { Navigate, useLocation } from "react-router-dom";
 import useTheme from "@/hooks/useTheme";
-import { Routes } from "@/router/routes";
+import { Routes, type RouteItem } from "@/router/routes";
 
 interface ProtectedPageProps {
   permissions?: string | string[];
   children: React.ReactNode;
 }
+
+// Helper function to find route label from nested routes
+const findRouteLabel = (
+  items: RouteItem[],
+  pathname: string
+): string | undefined => {
+  for (const item of items) {
+    if (item.path === pathname) {
+      return item.label;
+    }
+    if (item.children) {
+      const found = findRouteLabel(item.children, pathname);
+      if (found) return found;
+    }
+  }
+  return undefined;
+};
 
 const ProtectedPage = ({ permissions, children }: ProtectedPageProps) => {
   try {
@@ -15,14 +32,22 @@ const ProtectedPage = ({ permissions, children }: ProtectedPageProps) => {
       return <Navigate to="/login" replace />;
     }
 
+    // Super admin có quyền truy cập tất cả
     if (isSuperAdmin()) {
       return <PageItem>{children}</PageItem>;
     }
 
-    if (permissions && hasPermission(permissions)) {
+    // Nếu route không có permissions, cho phép truy cập (đã authenticated)
+    if (!permissions) {
       return <PageItem>{children}</PageItem>;
     }
 
+    // Kiểm tra permissions
+    if (hasPermission(permissions)) {
+      return <PageItem>{children}</PageItem>;
+    }
+
+    // Không có quyền truy cập
     return <Navigate to="/404" replace />;
   } catch (err) {
     console.error(err);
@@ -35,9 +60,8 @@ const PageItem = ({ children }: { children: React.ReactNode }) => {
   // get theme
   const { palette } = useTheme();
 
-  // get label
-  const menuMap = Routes.find((s) => s.path == pathname);
-  const title = menuMap?.label || "";
+  // get label from nested routes
+  const title = findRouteLabel(Routes, pathname) || "";
 
   return (
     <div

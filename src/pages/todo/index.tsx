@@ -1,29 +1,106 @@
-import { Avatar, Button, Flex, Input, Tabs } from "antd";
+import {
+  Avatar,
+  Button,
+  DatePicker,
+  Dropdown,
+  Flex,
+  Input,
+  Modal,
+  Select,
+  Space,
+  message,
+  Spin,
+  Tabs,
+} from "antd";
+
+const { RangePicker } = DatePicker;
 import BoardView from "./components/BoardView";
 import {
   FilterOutlined,
+  PlusOutlined,
   SearchOutlined,
   ShareAltOutlined,
 } from "@ant-design/icons";
 import TodoView from "./components/TodoView";
 import TableView from "./components/TableView";
 import { useEffect, useState } from "react";
-import type { Column, Task } from "@/types/todo/Board";
+import type { Column } from "@/types/todo/Board";
 import { useTodoQuery } from "@/api/todo";
+import { useNavigate } from "react-router-dom";
+import useTheme from "@/hooks/useTheme";
+import type { Dayjs } from "dayjs";
+import { useConstantStore } from "@/store/useConstantStore";
 
 const ToDoPage = () => {
-  const { data, isLoading } = useTodoQuery();
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filterDateRange, setFilterDateRange] = useState<
+    [Dayjs | null, Dayjs | null] | null
+  >(null);
+  const [filterStatus, setFilterStatus] = useState<number | undefined>(
+    undefined
+  );
+  const [filterPriority, setFilterPriority] = useState<number | undefined>(
+    undefined
+  );
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const { palette } = useTheme();
+  const { data: constants } = useConstantStore();
+
+  // Build query options for API call
+  const queryOptions = {
+    search: searchQuery.trim() || undefined,
+    startDate:
+      filterDateRange && filterDateRange[0]
+        ? filterDateRange[0].format("YYYY-MM-DD")
+        : undefined,
+    endDate:
+      filterDateRange && filterDateRange[1]
+        ? filterDateRange[1].format("YYYY-MM-DD")
+        : undefined,
+    status: filterStatus,
+    priority: filterPriority,
+  };
+
+  // Call API with filters - API will handle filtering
+  const { data, isLoading } = useTodoQuery(queryOptions);
   const [cols, setCols] = useState<Column[]>([]);
 
   useEffect(() => {
     if (data) {
-      setTasks(data?.tasks);
       setCols(data?.columns);
     }
   }, [data]);
 
-  if (isLoading) return <div>Loading...</div>;
+  const tasks = data?.tasks || [];
+
+  // Check if any filter is active
+  const hasActiveFilters =
+    (filterDateRange !== null &&
+      filterDateRange[0] !== null &&
+      filterDateRange[1] !== null) ||
+    filterStatus !== undefined ||
+    filterPriority !== undefined;
+
+  // Clear all filters
+  const handleClearFilters = () => {
+    setFilterDateRange(null);
+    setFilterStatus(undefined);
+    setFilterPriority(undefined);
+  };
+
+  const shareUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}${window.location.pathname}`
+      : "";
+
+  if (isLoading) {
+    return (
+      <Flex justify="center" align="center" style={{ minHeight: 280 }}>
+        <Spin size="large" />
+      </Flex>
+    );
+  }
 
   return (
     <div>
@@ -37,23 +114,144 @@ const ToDoPage = () => {
       >
         <Input
           prefix={<SearchOutlined />}
-          placeholder="Search anything..."
+          placeholder="Search tasks by title or description..."
           style={{ width: 350 }}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          allowClear
         />
 
-        <Button icon={<FilterOutlined />}>Filter</Button>
-        <Button icon={<ShareAltOutlined />}>Share</Button>
+        <Dropdown
+          trigger={["click"]}
+          dropdownRender={() => (
+            <div
+              style={{
+                background: palette.cardBg,
+                padding: 16,
+                borderRadius: 8,
+                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                minWidth: 300,
+                border: `1px solid ${palette.border}`,
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Space direction="vertical" style={{ width: "100%" }} size="middle">
+                <div>
+                  <div
+                    style={{
+                      marginBottom: 8,
+                      fontSize: 14,
+                      fontWeight: 500,
+                      color: palette.text,
+                    }}
+                  >
+                    Filter by Date Range
+                  </div>
+                  <RangePicker
+                    style={{ width: "100%" }}
+                    value={filterDateRange}
+                    onChange={(dates) => {
+                      if (dates) {
+                        setFilterDateRange([dates[0], dates[1]]);
+                      } else {
+                        setFilterDateRange(null);
+                      }
+                    }}
+                    format="YYYY-MM-DD"
+                    placeholder={["From date", "To date"]}
+                    allowClear
+                  />
+                </div>
 
-        {/* <Button
+                <div>
+                  <div
+                    style={{
+                      marginBottom: 8,
+                      fontSize: 14,
+                      fontWeight: 500,
+                      color: palette.text,
+                    }}
+                  >
+                    Filter by Status
+                  </div>
+                  <Select
+                    style={{ width: "100%" }}
+                    value={filterStatus}
+                    onChange={(value) => setFilterStatus(value)}
+                    placeholder="Select status"
+                    allowClear
+                    options={cols.map((col) => ({
+                      label: col.title,
+                      value: col.id,
+                    }))}
+                  />
+                </div>
+
+                <div>
+                  <div
+                    style={{
+                      marginBottom: 8,
+                      fontSize: 14,
+                      fontWeight: 500,
+                      color: palette.text,
+                    }}
+                  >
+                    Filter by Priority
+                  </div>
+                  <Select
+                    style={{ width: "100%" }}
+                    value={filterPriority}
+                    onChange={(value) => setFilterPriority(value)}
+                    placeholder="Select priority"
+                    allowClear
+                    options={
+                      constants?.priorities?.map((p) => ({
+                        label: p.label,
+                        value: p.id,
+                      })) ?? []
+                    }
+                  />
+                </div>
+
+                {hasActiveFilters && (
+                  <Button
+                    type="link"
+                    onClick={handleClearFilters}
+                    style={{ padding: 0, width: "100%", textAlign: "left" }}
+                  >
+                    Clear all filters
+                  </Button>
+                )}
+              </Space>
+            </div>
+          )}
+        >
+          <Button
+            icon={<FilterOutlined />}
+            type={hasActiveFilters ? "primary" : "default"}
+          >
+            Filter
+            {hasActiveFilters && " *"}
+          </Button>
+        </Dropdown>
+        <Button
+          icon={<ShareAltOutlined />}
+          onClick={() => setShareModalOpen(true)}
+        >
+          Share
+        </Button>
+
+        <Button
           type="primary"
-          style={{
-            background: mode == "dark" ? "#1f1f20ff" : "#f0f0f0",
-          }}
           icon={<PlusOutlined />}
-          onClick={() => setOpenModalTask(true)}
+          onClick={() => navigate("/todo/create")}
+          style={{
+            background: palette.primary,
+            borderColor: palette.primary,
+          }}
         >
           Add Task
-        </Button> */}
+        </Button>
 
         <Avatar.Group
           max={{
@@ -71,6 +269,59 @@ const ToDoPage = () => {
         <Button>Add assignee</Button>
       </Flex>
 
+      {/* Share Modal */}
+      <Modal
+        title="Share"
+        open={shareModalOpen}
+        onCancel={() => setShareModalOpen(false)}
+        footer={null}
+        styles={{
+          body: {
+            background: palette.cardBg,
+            border: `1px solid ${palette.border}`,
+          },
+          header: {
+            borderBottom: `1px solid ${palette.border}`,
+            color: palette.text,
+          },
+        }}
+      >
+        <Space direction="vertical" style={{ width: "100%" }} size="middle">
+          <div
+            style={{
+              fontSize: 14,
+              color: palette.textSecondary,
+            }}
+          >
+            Share this board with others via link:
+          </div>
+          <Input.TextArea
+            readOnly
+            value={shareUrl}
+            rows={2}
+            style={{
+              background: palette.background,
+              color: palette.text,
+              borderRadius: 8,
+            }}
+          />
+          <Button
+            type="primary"
+            onClick={() => {
+              navigator.clipboard?.writeText(shareUrl).then(() => {
+                message.success("Link copied to clipboard");
+              });
+            }}
+            style={{
+              background: palette.primary,
+              borderColor: palette.primary,
+            }}
+          >
+            Copy link
+          </Button>
+        </Space>
+      </Modal>
+
       {/* Tabs */}
       <Tabs
         defaultActiveKey="board"
@@ -79,20 +330,25 @@ const ToDoPage = () => {
             key: "board",
             label: "Board",
             children: (
-              <BoardView tasks={tasks} setTasks={setTasks} cols={cols} />
+              <BoardView
+                tasks={tasks}
+                cols={cols}
+                filterDateRange={filterDateRange}
+              />
             ),
           },
           {
             key: "todo",
             label: "To-do",
-            children: <TodoView tasks={tasks} />,
+            children: (
+              <TodoView tasks={tasks} filterDateRange={filterDateRange} />
+            ),
           },
           {
             key: "table",
             label: "Table",
             children: <TableView tasks={tasks} />,
           },
-          { key: "list", label: "List" },
         ]}
       />
     </div>
