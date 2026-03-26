@@ -70,6 +70,7 @@ const Sidebar = ({ collapsed, setCollapsed, collapsedWidth }: SidebarProps) => {
     >
       {/* Logo */}
       <div
+        onClick={() => window.location.assign("/dashboard")}
         style={{
           height: 64,
           margin: 24,
@@ -79,6 +80,7 @@ const Sidebar = ({ collapsed, setCollapsed, collapsedWidth }: SidebarProps) => {
           paddingLeft: collapsed ? 0 : 12,
           gap: collapsed ? 0 : 12,
           transition: "all 0.3s ease",
+          cursor: "pointer",
         }}
       >
         <Image

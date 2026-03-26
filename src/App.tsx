@@ -1,13 +1,13 @@
 import { RouterProvider } from "react-router-dom";
 import { getRouter } from "./router";
-import { useConstantsQuery } from "./api/constants";
+import { useMasterDataQuery } from "./api/master-data";
 import Loading from "./components/loading/Loading";
-import { useConstantStore } from "./store/useConstantStore";
+import { useMasterDataStore } from "./store/useMasterDataStore";
 import { useEffect } from "react";
 
 function App() {
-  const { data, isLoading } = useConstantsQuery();
-  const setData = useConstantStore((s) => s.setData);
+  const { data, isLoading } = useMasterDataQuery();
+  const setData = useMasterDataStore((s) => s.setData);
 
   useEffect(() => {
     if (data) {

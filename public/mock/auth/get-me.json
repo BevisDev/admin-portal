@@ -9,12 +9,17 @@
     "isAuthenticated": false,
     "roles": ["user"],
     "permissions": [
-      "menu.users",
-      "menu.reports",
+      "dashboard.view",
       "todo.view",
+      "todo.create",
+      "calendar.view",
+      "gold.view",
       "users.view",
-      "report.read",
-      "report.export"
+      "roles.view",
+      "permissions.view",
+      "settings.profile.view",
+      "settings.appearance.view",
+      "settings.security.view"
     ]
   }
 }

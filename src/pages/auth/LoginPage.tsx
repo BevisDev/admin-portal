@@ -50,7 +50,7 @@ const LoginPage = () => {
           }}
         >
           <Title level={3} style={{ textAlign: "center", marginBottom: 0 }}>
-            Đăng nhập
+            Sign In
           </Title>
 
           <GoogleButton onClick={handleGoogleLogin} />

@@ -11,6 +11,13 @@ import { Routes, type RouteItem } from "./routes";
 import ProtectedRoute from "@/components/protected/ProtectedRoute";
 import RouteErrorPage from "./RouteErrorPage";
 
+const EXTRA_ROUTE_GUARDS: Record<string, { roles?: string | string[]; permissions?: string | string[] }> = {
+  "/todo/create": {
+    roles: "user",
+    permissions: "todo.create",
+  },
+};
+
 export const getRouter = () => {
   return createBrowserRouter([
     {
@@ -31,7 +38,11 @@ export const getRouter = () => {
           children: [
             {
               index: true,
-              element: <DashBoardPage />,
+              element: (
+                <ProtectedPage roles="user" permissions="dashboard.view">
+                  <DashBoardPage />
+                </ProtectedPage>
+              ),
             },
             ...buildRoutes(Routes),
           ],
@@ -54,7 +65,7 @@ export const buildRoutes = (items: RouteItem[]): RouteObject[] => {
       routes.push({
         path: item.path,
         element: (
-          <ProtectedPage permissions={item.permissions}>
+          <ProtectedPage roles={item.roles} permissions={item.permissions}>
             <Page />
           </ProtectedPage>
         ),
@@ -72,7 +83,10 @@ export const buildRoutes = (items: RouteItem[]): RouteObject[] => {
       routes.push({
         path,
         element: (
-          <ProtectedPage>
+          <ProtectedPage
+            roles={EXTRA_ROUTE_GUARDS[path]?.roles}
+            permissions={EXTRA_ROUTE_GUARDS[path]?.permissions}
+          >
             <Page />
           </ProtectedPage>
         ),

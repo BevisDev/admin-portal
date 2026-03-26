@@ -18,7 +18,10 @@ import TaskCard from "./TaskCard";
 import DroppableItem from "@/components/dnd/DroppableItem";
 import { Flex } from "antd";
 import dayjs, { type Dayjs } from "dayjs";
-import { useMoveTaskMutation } from "@/api/todo";
+import {
+  useMoveTaskMutation,
+  useUpdateTaskStatusAndColumnMutation,
+} from "@/api/todo";
 
 interface BoardViewProps {
   tasks: Task[];
@@ -29,6 +32,7 @@ interface BoardViewProps {
 const BoardView = ({ tasks, cols, filterDateRange }: BoardViewProps) => {
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const moveTaskMutation = useMoveTaskMutation();
+  const updateTaskStatusAndColumnMutation = useUpdateTaskStatusAndColumnMutation();
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -108,17 +112,17 @@ const BoardView = ({ tasks, cols, filterDateRange }: BoardViewProps) => {
       // DROP INTO EMPTY COLUMN
       if (overIdStr.startsWith("drop")) {
         const newColId = Number(overIdStr.replace("drop-", ""));
+        const nextStatus = cols.find((c) => c.id === newColId)?.title ?? activeTask.status;
 
-        // Call API to move task
+        // Cross-column drop: update both columnId and status.
         try {
-          await moveTaskMutation.mutateAsync({
+          await updateTaskStatusAndColumnMutation.mutateAsync({
             taskId,
-            fromColId: activeTask.columnId,
-            toColId: newColId,
-            newIndex: 0,
+            columnId: newColId,
+            status: nextStatus,
           });
         } catch (error) {
-          console.error("Failed to move task:", error);
+          console.error("Failed to update task column/status:", error);
         }
 
         setActiveTask(null);
@@ -132,6 +136,7 @@ const BoardView = ({ tasks, cols, filterDateRange }: BoardViewProps) => {
 
       const fromColId = activeTask.columnId;
       const toColId = overTask.columnId;
+      const nextStatus = cols.find((c) => c.id === toColId)?.title ?? activeTask.status;
 
       // REORDER INSIDE SAME COLUMN
       if (fromColId === toColId) {
@@ -158,36 +163,21 @@ const BoardView = ({ tasks, cols, filterDateRange }: BoardViewProps) => {
         return;
       }
 
-      // MOVE TO ANOTHER COLUMN
-      // Find the index in the filtered view to determine insert position
-      const filteredToColumnTasks = filteredTasks.filter((t) => t.columnId === toColId);
-      const insertIndexInFiltered = filteredToColumnTasks.findIndex((t) => t.id === overId);
-
-      // Find corresponding task in all tasks
-      const toColumnTasks = tasks.filter((t) => t.columnId === toColId);
-      let insertIndex = 0;
-      if (insertIndexInFiltered >= 0 && insertIndexInFiltered < filteredToColumnTasks.length) {
-        const targetTaskInFiltered = filteredToColumnTasks[insertIndexInFiltered];
-        insertIndex = toColumnTasks.findIndex((t) => t.id === targetTaskInFiltered.id);
-      }
-      if (insertIndex === -1) insertIndex = toColumnTasks.length;
-
-      // Call API to move task
+      // Cross-column drop: update both columnId and status.
       try {
-        await moveTaskMutation.mutateAsync({
+        await updateTaskStatusAndColumnMutation.mutateAsync({
           taskId,
-          fromColId,
-          toColId,
-          newIndex: insertIndex,
+          columnId: toColId,
+          status: nextStatus,
         });
       } catch (error) {
-        console.error("Failed to move task:", error);
+        console.error("Failed to update task column/status:", error);
       }
 
       // remove task active
       setActiveTask(null);
     },
-    [tasks, filteredTasks, moveTaskMutation]
+    [tasks, filteredTasks, cols, moveTaskMutation, updateTaskStatusAndColumnMutation]
   );
 
   return (

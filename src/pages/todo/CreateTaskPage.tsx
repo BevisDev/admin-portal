@@ -11,7 +11,7 @@ import {
 } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { useConstantStore } from "@/store/useConstantStore";
+import { useMasterDataStore } from "@/store/useMasterDataStore";
 import useTheme from "@/hooks/useTheme";
 import dayjs from "dayjs";
 import type { Task } from "@/types/todo/Board";
@@ -23,18 +23,18 @@ const { TextArea } = Input;
 interface CreateTaskFormValues {
     title: string;
     description?: string;
+    startDate?: dayjs.Dayjs;
     dueDate?: dayjs.Dayjs;
     priority: number;
     columnId: number;
     progress?: number;
-    assignees?: string[];
 }
 
 const CreateTaskPage = () => {
     const navigate = useNavigate();
     const { palette } = useTheme();
     const [form] = Form.useForm<CreateTaskFormValues>();
-    const { data: constants } = useConstantStore();
+    const { data: constants } = useMasterDataStore();
     const { data: todoData, isLoading: isLoadingTodo } = useTodoQuery();
     const createTaskMutation = useCreateTaskMutation();
 
@@ -50,12 +50,13 @@ const CreateTaskPage = () => {
             const newTask: Omit<Task, "id"> = {
                 title: values.title,
                 description: values.description,
+                startDate: values.startDate?.format("YYYY-MM-DD"),
                 dueDate: values.dueDate?.format("YYYY-MM-DD"),
                 priority: values.priority,
                 columnId: values.columnId,
                 progress: values.progress ?? 0,
                 status: columns.find((c) => c.id === values.columnId)?.title || "",
-                assignees: values.assignees || [],
+                assignees: [],
                 comments: 0,
                 views: 0,
             };
@@ -199,8 +200,21 @@ const CreateTaskPage = () => {
                         </Form.Item>
                     </Space.Compact>
 
-                    {/* Row: Due Date & Progress */}
+                    {/* Row: Start Date, Due Date & Progress */}
                     <Space.Compact style={{ width: "100%", gap: 16 }}>
+                        <Form.Item
+                            label="Start Date"
+                            name="startDate"
+                            style={{ flex: 1 }}
+                        >
+                            <DatePicker
+                                size="large"
+                                style={{ width: "100%", borderRadius: 8 }}
+                                format="YYYY-MM-DD"
+                                placeholder="Select start date"
+                            />
+                        </Form.Item>
+
                         <Form.Item
                             label="Due Date"
                             name="dueDate"
@@ -232,20 +246,6 @@ const CreateTaskPage = () => {
                             />
                         </Form.Item>
                     </Space.Compact>
-
-                    {/* Assignees - Optional for now */}
-                    {/* <Form.Item
-            label="Assignees"
-            name="assignees"
-          >
-            <Select
-              mode="multiple"
-              size="large"
-              placeholder="Select assignees"
-              style={{ borderRadius: 8 }}
-              options={[]}
-            />
-          </Form.Item> */}
 
                     {/* Actions */}
                     <Form.Item style={{ marginTop: 32, marginBottom: 0 }}>

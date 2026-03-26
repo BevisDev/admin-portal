@@ -10,7 +10,7 @@ export interface Status {
   color: string;
 }
 
-export interface Constant {
+export interface MasterData {
   priorities: Priority[];
   statuses: Status[];
 }

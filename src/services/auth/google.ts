@@ -9,9 +9,24 @@ import type { NavigateFunction } from "react-router-dom";
 const POST_LOGIN_REDIRECT_KEY = "admin-portal:post-login-redirect";
 
 
+type LoginArgs = {
+  from: string;
+  me: Me | null;
+  setMe: (data: Me) => void;
+  navigate: NavigateFunction;
+};
+
 type HandleGoogleCallbackArgs = {
   setMe: (data: Me) => void;
   navigate: NavigateFunction;
+};
+
+type GoogleProfile = {
+  sub: string;
+  name: string;
+  email: string;
+  picture?: string;
+  verified_email?: boolean;
 };
 
 export const login = ({
@@ -19,7 +34,7 @@ export const login = ({
   me,
   setMe,
   navigate,
-}: StartGoogleLoginArgs): {
+}: LoginArgs): {
   mode: "oauth" | "demo" | "error";
   error?: string;
 } => {
@@ -33,7 +48,7 @@ export const login = ({
     if (!me) {
       return {
         mode: "error",
-        error: "Phiên đăng nhập chưa sẵn sàng. Vui lòng thử lại.",
+        error: "Login session is not ready. Please try again.",
       };
     }
 
@@ -42,7 +57,7 @@ export const login = ({
       isAuthenticated: true,
     });
     navigate(from, { replace: true });
-    message.info("Chưa cấu hình Google OAuth. Đang dùng đăng nhập demo.");
+    message.info("Google OAuth is not configured. Using demo login.");
     return { mode: "demo" };
   }
 
@@ -60,8 +75,8 @@ export const login = ({
 
   const authUrl =
     SysConfig.googleOauthUrl +
-    `?client_id=${encodeURIComponent(SysConfig.googleClientId)}` +
-    `&redirect_uri=${encodeURIComponent(SysConfig.googleRedirectUri)}` +
+    `?client_id=${encodeURIComponent(clientId)}` +
+    `&redirect_uri=${encodeURIComponent(redirectUri)}` +
     `&response_type=code` +
     `&scope=${encodeURIComponent(scope)}` +
     `&state=${encodeURIComponent(state)}` +
@@ -86,15 +101,26 @@ export const handleGoogleCallback = async ({
   }
 
   if (!code) {
-    return { error: "Không nhận được mã đăng nhập (code) từ Google." };
+    return { error: "Missing Google login authorization code." };
   }
 
   try {
     // Demo only: we don't exchange code with backend yet.
-    // We load mock "me" and mark authenticated to unlock protected routes.
-    const res = await GETQuery<null, Response<Me>>({ url: API.me });
+    // We load mock "me" + mock google profile and map to user info.
+    const [meRes, googleRes] = await Promise.all([
+      GETQuery<null, Response<Me>>({ url: API.me }),
+      GETQuery<null, Response<GoogleProfile>>({ url: API.googleCallback }),
+    ]);
+    const google = googleRes.data;
+
     setMe({
-      ...res.data,
+      ...meRes.data,
+      info: {
+        ...meRes.data.info,
+        fullName: google.name || meRes.data.info.fullName,
+        email: google.email || meRes.data.info.email,
+        avatarUrl: google.picture || meRes.data.info.avatarUrl,
+      },
       isAuthenticated: true,
     });
 
@@ -103,6 +129,6 @@ export const handleGoogleCallback = async ({
     navigate(to, { replace: true });
     return {};
   } catch {
-    return { error: "Không thể hoàn tất đăng nhập. Vui lòng thử lại." };
+    return { error: "Unable to complete sign-in. Please try again." };
   }
 };

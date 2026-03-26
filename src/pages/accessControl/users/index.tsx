@@ -11,11 +11,11 @@ const columns: ColumnsType<User> = [
     width: 70,
     render: (_, __, index) => index + 1,
   },
-  { title: "Tên", dataIndex: "fullName" },
+  { title: "Name", dataIndex: "fullName" },
   { title: "Email", dataIndex: "email" },
-  { title: "SĐT", dataIndex: "phone" },
+  { title: "Phone", dataIndex: "phone" },
   {
-    title: "Trạng thái",
+    title: "Status",
     dataIndex: "status",
     render: (v) =>
       v === "active" ? (
@@ -52,12 +52,10 @@ export const UsersPage = () => {
 
   return (
     <>
-      <h1 style={{ marginBottom: 20 }}>Users</h1>
-
       {/* Filter Bar */}
       <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
         <Input
-          placeholder="Tìm theo tên, email, SĐT..."
+          placeholder="Search by name, email, phone..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           allowClear
@@ -65,7 +63,7 @@ export const UsersPage = () => {
         />
 
         <Select
-          placeholder="Trạng thái"
+          placeholder="Status"
           allowClear
           style={{ width: 160 }}
           value={status}

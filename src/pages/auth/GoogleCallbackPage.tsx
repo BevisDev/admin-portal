@@ -18,7 +18,7 @@ const GoogleCallbackPage = () => {
   if (error) {
     return (
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <Result status="error" title="Đăng nhập Google thất bại" subTitle={error} />
+        <Result status="error" title="Google sign-in failed" subTitle={error} />
       </div>
     );
   }

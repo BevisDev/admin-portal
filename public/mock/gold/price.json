@@ -1,0 +1,29 @@
+{
+  "data": {
+    "updatedAt": "2026-03-26T07:00:00.000Z",
+    "source": "mock",
+    "items": [
+      {
+        "typeCode": "SJL1L10",
+        "label": "SJC 9999",
+        "buy": 85400000,
+        "sell": 87900000,
+        "updatedAt": "2026-03-26T07:00:00.000Z"
+      },
+      {
+        "typeCode": "SJ9999",
+        "label": "Nhan SJC 9999",
+        "buy": 84600000,
+        "sell": 86800000,
+        "updatedAt": "2026-03-26T07:00:00.000Z"
+      },
+      {
+        "typeCode": "DOHNL",
+        "label": "DOJI Ha Noi",
+        "buy": 85300000,
+        "sell": 87800000,
+        "updatedAt": "2026-03-26T07:00:00.000Z"
+      }
+    ]
+  }
+}

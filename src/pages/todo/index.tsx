@@ -1,14 +1,10 @@
 import {
-  Avatar,
   Button,
   DatePicker,
   Dropdown,
   Flex,
   Input,
-  Modal,
   Select,
-  Space,
-  message,
   Spin,
   Tabs,
 } from "antd";
@@ -19,7 +15,6 @@ import {
   FilterOutlined,
   PlusOutlined,
   SearchOutlined,
-  ShareAltOutlined,
 } from "@ant-design/icons";
 import TodoView from "./components/TodoView";
 import TableView from "./components/TableView";
@@ -29,7 +24,7 @@ import { useTodoQuery } from "@/api/todo";
 import { useNavigate } from "react-router-dom";
 import useTheme from "@/hooks/useTheme";
 import type { Dayjs } from "dayjs";
-import { useConstantStore } from "@/store/useConstantStore";
+import { useMasterDataStore } from "@/store/useMasterDataStore";
 
 const ToDoPage = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -42,10 +37,9 @@ const ToDoPage = () => {
   const [filterPriority, setFilterPriority] = useState<number | undefined>(
     undefined
   );
-  const [shareModalOpen, setShareModalOpen] = useState(false);
   const navigate = useNavigate();
   const { palette } = useTheme();
-  const { data: constants } = useConstantStore();
+  const { data: constants } = useMasterDataStore();
 
   // Build query options for API call
   const queryOptions = {
@@ -89,11 +83,6 @@ const ToDoPage = () => {
     setFilterPriority(undefined);
   };
 
-  const shareUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}${window.location.pathname}`
-      : "";
-
   if (isLoading) {
     return (
       <Flex justify="center" align="center" style={{ minHeight: 280 }}>
@@ -123,7 +112,7 @@ const ToDoPage = () => {
 
         <Dropdown
           trigger={["click"]}
-          dropdownRender={() => (
+          popupRender={() => (
             <div
               style={{
                 background: palette.cardBg,
@@ -135,7 +124,7 @@ const ToDoPage = () => {
               }}
               onClick={(e) => e.stopPropagation()}
             >
-              <Space direction="vertical" style={{ width: "100%" }} size="middle">
+              <Flex vertical style={{ width: "100%" }} gap="middle">
                 <div>
                   <div
                     style={{
@@ -222,7 +211,7 @@ const ToDoPage = () => {
                     Clear all filters
                   </Button>
                 )}
-              </Space>
+              </Flex>
             </div>
           )}
         >
@@ -235,13 +224,6 @@ const ToDoPage = () => {
           </Button>
         </Dropdown>
         <Button
-          icon={<ShareAltOutlined />}
-          onClick={() => setShareModalOpen(true)}
-        >
-          Share
-        </Button>
-
-        <Button
           type="primary"
           icon={<PlusOutlined />}
           onClick={() => navigate("/todo/create")}
@@ -253,74 +235,7 @@ const ToDoPage = () => {
           Add Task
         </Button>
 
-        <Avatar.Group
-          max={{
-            count: 3,
-            style: {
-              background: "#111",
-            },
-          }}
-        >
-          <Avatar style={{ background: "#00B894" }}>AK</Avatar>
-          <Avatar style={{ background: "#6C5CE7" }}>BD</Avatar>
-          <Avatar style={{ background: "#0984E3" }}>DL</Avatar>
-        </Avatar.Group>
-
-        <Button>Add assignee</Button>
       </Flex>
-
-      {/* Share Modal */}
-      <Modal
-        title="Share"
-        open={shareModalOpen}
-        onCancel={() => setShareModalOpen(false)}
-        footer={null}
-        styles={{
-          body: {
-            background: palette.cardBg,
-            border: `1px solid ${palette.border}`,
-          },
-          header: {
-            borderBottom: `1px solid ${palette.border}`,
-            color: palette.text,
-          },
-        }}
-      >
-        <Space direction="vertical" style={{ width: "100%" }} size="middle">
-          <div
-            style={{
-              fontSize: 14,
-              color: palette.textSecondary,
-            }}
-          >
-            Share this board with others via link:
-          </div>
-          <Input.TextArea
-            readOnly
-            value={shareUrl}
-            rows={2}
-            style={{
-              background: palette.background,
-              color: palette.text,
-              borderRadius: 8,
-            }}
-          />
-          <Button
-            type="primary"
-            onClick={() => {
-              navigator.clipboard?.writeText(shareUrl).then(() => {
-                message.success("Link copied to clipboard");
-              });
-            }}
-            style={{
-              background: palette.primary,
-              borderColor: palette.primary,
-            }}
-          >
-            Copy link
-          </Button>
-        </Space>
-      </Modal>
 
       {/* Tabs */}
       <Tabs

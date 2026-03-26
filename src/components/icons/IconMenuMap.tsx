@@ -1,7 +1,11 @@
 import {
+  CalendarOutlined,
   CheckSquareOutlined,
   DashboardOutlined,
+  DollarCircleOutlined,
+  LockOutlined,
   KeyOutlined,
+  BgColorsOutlined,
   SafetyOutlined,
   SettingOutlined,
   TeamOutlined,
@@ -16,4 +20,9 @@ export const IconMenuMap: Record<string, React.ReactNode> = {
   roles: <TeamOutlined />,
   permissions: <KeyOutlined />,
   todo: <CheckSquareOutlined />,
+  calendar: <CalendarOutlined />,
+  gold: <DollarCircleOutlined />,
+  settingsProfile: <UserOutlined />,
+  settingsAppearance: <BgColorsOutlined />,
+  settingsSecurity: <LockOutlined />,
 };

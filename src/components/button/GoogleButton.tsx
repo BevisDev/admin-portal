@@ -29,7 +29,7 @@ const GoogleButton = ({ onClick }: GoogleButtonProps) => {
         width={20}
         style={{ display: "block" }}
       />
-      Đăng nhập với Google
+      Sign in with Google
     </Button>
   );
 };

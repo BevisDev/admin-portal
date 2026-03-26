@@ -5,6 +5,19 @@ import dayjs from "dayjs";
 // In-memory storage for mock data
 let mockTodoData: Todo | null = null;
 
+const normalizeTask = (task: Task): Task => {
+  const normalizedDueDate = task.dueDate ? dayjs(task.dueDate) : null;
+  const fallbackStartDate = normalizedDueDate
+    ? normalizedDueDate.subtract(2, "day").format("YYYY-MM-DD")
+    : dayjs().format("YYYY-MM-DD");
+
+  return {
+    ...task,
+    startDate: task.startDate || fallbackStartDate,
+    assignees: task.assignees || [],
+  };
+};
+
 // Load initial data from JSON
 const loadMockData = async (): Promise<Todo> => {
   if (mockTodoData) return mockTodoData;
@@ -12,7 +25,10 @@ const loadMockData = async (): Promise<Todo> => {
   try {
     const response = await fetch("/mock/todo/todo.json");
     const json = await response.json();
-    mockTodoData = json.data;
+    mockTodoData = {
+      ...json.data,
+      tasks: (json.data.tasks as Task[]).map(normalizeTask),
+    };
     if (!mockTodoData) {
       throw new Error("Failed to load mock data");
     }
@@ -81,7 +97,7 @@ export const mockTodoService = {
     }
 
     return {
-      isSuccess: true,
+      success: true,
       data: {
         ...data,
         tasks: filteredTasks,
@@ -98,6 +114,11 @@ export const mockTodoService = {
     const newTask: Task = {
       ...taskData,
       id: Date.now(), // Generate ID
+      startDate:
+        taskData.startDate ||
+        (taskData.dueDate
+          ? dayjs(taskData.dueDate).subtract(2, "day").format("YYYY-MM-DD")
+          : dayjs().format("YYYY-MM-DD")),
       comments: taskData.comments ?? 0,
       views: taskData.views ?? 0,
       progress: taskData.progress ?? 0,
@@ -113,7 +134,7 @@ export const mockTodoService = {
     }
 
     return {
-      isSuccess: true,
+      success: true,
       data: newTask,
       responseAt: new Date().toISOString(),
     };
@@ -158,7 +179,52 @@ export const mockTodoService = {
     }
 
     return {
-      isSuccess: true,
+      success: true,
+      data: updatedTask,
+      responseAt: new Date().toISOString(),
+    };
+  },
+
+  // PATCH /api/todo/:id/status-column - Update status + columnId only
+  async updateTaskStatusAndColumn(
+    taskId: number,
+    payload: { columnId: number; status: string }
+  ): Promise<Response<Task>> {
+    await delay(300);
+
+    const data = await loadMockData();
+    const taskIndex = data.tasks.findIndex((t) => t.id === taskId);
+
+    if (taskIndex === -1) {
+      throw {
+        code: 404,
+        message: "Task not found",
+      };
+    }
+
+    const oldTask = data.tasks[taskIndex];
+    const updatedTask: Task = {
+      ...oldTask,
+      columnId: payload.columnId,
+      status: payload.status,
+      id: taskId,
+    };
+
+    data.tasks[taskIndex] = updatedTask;
+
+    if (oldTask.columnId !== payload.columnId) {
+      const oldColumn = data.columns.find((col) => col.id === oldTask.columnId);
+      const newColumn = data.columns.find((col) => col.id === payload.columnId);
+      if (oldColumn) {
+        oldColumn.total = data.tasks.filter((t) => t.columnId === oldColumn.id).length;
+      }
+      if (newColumn) {
+        newColumn.total = data.tasks.filter((t) => t.columnId === newColumn.id).length;
+      }
+    }
+
+    return {
+      success: true,
       data: updatedTask,
       responseAt: new Date().toISOString(),
     };
@@ -188,7 +254,7 @@ export const mockTodoService = {
     }
 
     return {
-      isSuccess: true,
+      success: true,
       data: true,
       responseAt: new Date().toISOString(),
     };
@@ -226,7 +292,7 @@ export const mockTodoService = {
     }
 
     return {
-      isSuccess: true,
+      success: true,
       data: task,
       responseAt: new Date().toISOString(),
     };

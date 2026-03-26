@@ -1,0 +1,39 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "key": "users.view",
+      "module": "Users",
+      "description": "View user list",
+      "status": "active"
+    },
+    {
+      "id": "2",
+      "key": "users.update",
+      "module": "Users",
+      "description": "Update user information",
+      "status": "active"
+    },
+    {
+      "id": "3",
+      "key": "roles.view",
+      "module": "Roles",
+      "description": "View role list",
+      "status": "active"
+    },
+    {
+      "id": "4",
+      "key": "permissions.view",
+      "module": "Permissions",
+      "description": "View permission list",
+      "status": "active"
+    },
+    {
+      "id": "5",
+      "key": "todo.view",
+      "module": "Todo",
+      "description": "View to-do list",
+      "status": "inactive"
+    }
+  ]
+}
