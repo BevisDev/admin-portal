@@ -1,8 +1,9 @@
-import MSButton from "@/components/button/MSButton";
+import GoogleButton from "@/components/button/GoogleButton";
 import { useMeStore } from "@/store/useMeStore";
-import { Card, Typography } from "antd";
+import { Card, Typography, message } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import bgLogin from "@/assets/background/bg-login.jpg";
+import { login } from "@/services/auth/google";
 
 const { Title } = Typography;
 
@@ -13,13 +14,11 @@ const LoginPage = () => {
   // const [loading, setLoading] = useState(false);
   const { me, setMe } = useMeStore((s) => s);
 
-  const handleClick = () => {
-    if (!me) return;
-    setMe({
-      ...me,
-      isAuthenticated: true,
-    });
-    navigate(from, { replace: true });
+  const handleGoogleLogin = () => {
+    const res = login({ from, me, setMe, navigate });
+    if (res.mode === "error" && res.error) {
+      message.error(res.error);
+    }
   };
 
   return (
@@ -54,7 +53,7 @@ const LoginPage = () => {
             Đăng nhập
           </Title>
 
-          <MSButton onClick={handleClick} />
+          <GoogleButton onClick={handleGoogleLogin} />
         </div>
       </Card>
     </div>

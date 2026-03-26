@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { Me } from "@/types/auth/Me";
 import { GETQuery } from "@/hooks/useFetchQuery";
-import type { Response } from "@/types/Response";
+import type { Response } from "@/types/response";
 import { API } from "@/api";
 
 export const useMeQuery = () => {

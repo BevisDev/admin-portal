@@ -4,6 +4,7 @@ import NotFoundPage from "@/pages/NotFoundPage";
 import ProtectedPage from "@/components/protected/ProtectedPage";
 import type { ComponentType } from "react";
 import LoginPage from "@/pages/auth/LoginPage";
+import GoogleCallbackPage from "@/pages/auth/GoogleCallbackPage";
 import DashBoardPage from "@/pages/dashboard";
 import { PageMap } from "@/router/PageMap";
 import { Routes, type RouteItem } from "./routes";
@@ -15,6 +16,10 @@ export const getRouter = () => {
     {
       path: "/login",
       element: <LoginPage />,
+    },
+    {
+      path: "/auth/google/callback",
+      element: <GoogleCallbackPage />,
     },
     {
       element: <ProtectedRoute />,

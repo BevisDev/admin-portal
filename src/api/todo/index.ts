@@ -1,5 +1,5 @@
 import { GETQuery } from "@/hooks/useFetchQuery";
-import type { Response } from "@/types/Response";
+import type { Response } from "@/types/response";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { API } from "..";
 import type { Todo, Task } from "@/types/todo/Board";

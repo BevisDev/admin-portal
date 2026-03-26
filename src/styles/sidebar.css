@@ -19,7 +19,9 @@
   font-weight: 500 !important;
 
   /* Hiệu ứng glow */
-  box-shadow: 0 0 12px rgba(0, 185, 255, 0.55), 0 0 20px rgba(0, 185, 255, 0.25),
+  box-shadow:
+    0 0 12px rgba(0, 185, 255, 0.55),
+    0 0 20px rgba(0, 185, 255, 0.25),
     inset 0 0 6px rgba(0, 185, 255, 0.35) !important;
 }
 
@@ -56,10 +58,14 @@
   animation: glowBorderAnim 3s linear infinite;
 
   /* Chỉ hiển thị viền, không phủ background item */
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
   mask-composite: exclude;
 
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
 
   pointer-events: none;
@@ -83,7 +89,8 @@
   background: rgba(140, 90, 255, 0.14) !important;
   border-radius: 10px !important;
 
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04),
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
     inset 0 0 0 1px rgba(140, 90, 255, 0.25) !important;
 
   color: #6d40ff !important;
@@ -93,4 +100,48 @@
 /* Hover – nhẹ nhàng */
 .glow-menu-light .ant-menu-item:hover {
   background: rgba(140, 90, 255, 0.1) !important;
+}
+
+/* ==== Sidebar footer ==== */
+.sidebar-footer {
+  position: absolute;
+  bottom: 16px;
+  left: 12px;
+  right: 12px;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  opacity: 0.6;
+  transition: all 0.3s ease;
+  line-height: 1.3;
+}
+
+.sidebar-footer-text {
+  font-size: clamp(10px, 1.2vw, 12px);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.sidebar-footer-version {
+  margin-top: 2px;
+  font-size: clamp(9px, 1vw, 11px);
+  opacity: 0.8;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.sidebar-footer--collapsed {
+  bottom: 12px;
+}
+
+@media (max-width: 420px) {
+  .sidebar-footer {
+    bottom: 10px;
+    left: 8px;
+    right: 8px;
+  }
 }

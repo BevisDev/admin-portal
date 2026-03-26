@@ -15,6 +15,7 @@ const { Sider } = Layout;
 interface SidebarProps {
   collapsed: boolean;
   setCollapsed: () => void;
+  collapsedWidth: number;
 }
 
 const buildMenuItems = (
@@ -41,10 +42,11 @@ const buildMenuItems = (
     });
 };
 
-const Sidebar = ({ collapsed, setCollapsed }: SidebarProps) => {
+const Sidebar = ({ collapsed, setCollapsed, collapsedWidth }: SidebarProps) => {
   const location = useLocation();
   const { theme, palette } = useTheme();
   const me = useMeStore((s) => s.me);
+  const footerTitle = collapsed ? "BevisDev ❤️" : "From BevisDev with ❤️";
 
   const menuItems = useMemo(() => {
     return buildMenuItems(Routes, me?.permissions ?? []);
@@ -57,6 +59,7 @@ const Sidebar = ({ collapsed, setCollapsed }: SidebarProps) => {
       onCollapse={setCollapsed}
       trigger={null}
       width={220}
+      collapsedWidth={collapsedWidth}
       theme={theme}
       style={{
         minHeight: "100vh",
@@ -101,29 +104,12 @@ const Sidebar = ({ collapsed, setCollapsed }: SidebarProps) => {
         }}
       />
 
-      {/* Copyright */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 16,
-          left: "50%",
-          transform: "translateX(-50%)",
-          fontSize: 12,
-          opacity: 0.6,
-          whiteSpace: "nowrap",
-          transition: "all 0.3s ease",
-          pointerEvents: "none",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          lineHeight: 1.4,
-        }}
-      >
-        <span>From BevisDev with ❤️</span>
-        <span style={{ fontSize: 11, opacity: 0.8 }}>
-          v{SysConfig.appVersion}
-        </span>
-      </div>
+      {!collapsed && (
+        <div className="sidebar-footer">
+          <span className="sidebar-footer-text">{footerTitle}</span>
+          <span className="sidebar-footer-version">v{SysConfig.appVersion}</span>
+        </div>
+      )}
     </Sider>
   );
 };

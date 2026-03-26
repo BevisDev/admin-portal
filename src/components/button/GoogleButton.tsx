@@ -1,10 +1,10 @@
 import { Button, Image } from "antd";
 
-interface MSButtonProps {
+interface GoogleButtonProps {
   onClick: () => void;
 }
 
-const MSButton = ({ onClick }: MSButtonProps) => {
+const GoogleButton = ({ onClick }: GoogleButtonProps) => {
   return (
     <Button
       block
@@ -15,22 +15,24 @@ const MSButton = ({ onClick }: MSButtonProps) => {
         gap: 12,
         justifyContent: "center",
         padding: "auto 12px auto",
-        background: "#2f2f2f",
-        color: "#fff",
+        background: "#ffffff",
+        color: "#1f1f1f",
         fontWeight: 600,
+        border: "1px solid rgba(0,0,0,0.15)",
       }}
       onClick={onClick}
     >
       <Image
         preview={false}
-        src="/logo/ms.svg"
-        alt="Microsoft"
+        src="/logo/google.svg"
+        alt="Google"
         width={20}
         style={{ display: "block" }}
       />
-      Đăng nhập với Microsoft
+      Đăng nhập với Google
     </Button>
   );
 };
 
-export default MSButton;
+export default GoogleButton;
+

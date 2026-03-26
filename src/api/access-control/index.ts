@@ -1,5 +1,5 @@
 import { GETQuery } from "@/hooks/useFetchQuery";
-import type { Response } from "@/types/Response";
+import type { Response } from "@/types/response";
 import type { User } from "@/types/user/User";
 import { useQuery } from "@tanstack/react-query";
 import { API } from "..";

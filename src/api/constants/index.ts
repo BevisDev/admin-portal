@@ -1,7 +1,7 @@
 import { GETQuery } from "@/hooks/useFetchQuery";
 import { useQuery } from "@tanstack/react-query";
 import { API } from "..";
-import type { Response } from "@/types/Response";
+import type { Response } from "@/types/response";
 import type { Constant } from "@/types/constants/constant";
 
 export const useConstantsQuery = () => {
