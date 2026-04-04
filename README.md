@@ -71,3 +71,21 @@ export default defineConfig([
   },
 ])
 ```
+
+## Deploy (GitHub Actions)
+
+Push to `master` or `main` runs `.github/workflows/deploy.yml`: it runs `npm ci` + `npm run build`, then **rsync**s the `dist/` folder to your server over SSH.
+
+Add these **repository secrets** (Settings → Secrets and variables → Actions):
+
+| Secret | Description |
+|--------|-------------|
+| `DEPLOY_HOST` | Server hostname or IP |
+| `DEPLOY_USER` | SSH user (e.g. `deploy`) |
+| `DEPLOY_PATH` | Absolute path to the web root on the server (e.g. `/var/www/admin-portal`; trailing slash not required) |
+| `DEPLOY_SSH_KEY` | Private key (PEM) for that user; matching public key must be in `~/.ssh/authorized_keys` on the host |
+| `DEPLOY_PORT` | *(optional)* SSH port; default `22` |
+
+The deploy user needs **write** permission on `DEPLOY_PATH`. On the server, nginx (or your stack) should already serve files from that directory and support SPA fallback if needed.
+
+You can also run the workflow manually: **Actions → Deploy to host → Run workflow**.
