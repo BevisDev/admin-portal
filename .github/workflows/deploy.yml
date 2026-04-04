@@ -2,15 +2,14 @@ name: Deploy
 
 on:
   push:
-    branches: master
-  workflow_dispatch:
+    branches: [ master ]
 
 permissions:
   contents: read
 
 jobs:
   deploy:
-    uses: BevisDev/cicd/.github/workflows/run.yml@master
+    uses: BevisOrg/cicd/.github/workflows/action.yml@master
     with:
       service_name: admin-portal
     secrets: inherit
