@@ -11,4 +11,6 @@ permissions:
 jobs:
   deploy:
     uses: BevisDev/cicd/.github/workflows/run.yml@master
+    with:
+      service_name: admin-portal
     secrets: inherit
