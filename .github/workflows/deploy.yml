@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   deploy:
-    uses: BevisOrg/cicd/.github/workflows/action.yml@master
+    uses: BevisOrg/cicd/.github/workflows/run-docker.yml@master
     with:
       service_name: admin-portal
     secrets: inherit
