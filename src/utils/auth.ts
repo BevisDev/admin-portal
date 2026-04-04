@@ -5,11 +5,19 @@ export const normalizePerms = (perms?: string | string[]): string[] => {
   return perms ? (Array.isArray(perms) ? perms : [perms]) : [];
 };
 
+export const normalizeRoles = (roles?: string | string[]): string[] => {
+  return roles ? (Array.isArray(roles) ? roles : [roles]) : [];
+};
+
 export const hasAccessRoute = (
   item: RouteItem,
   userPerms: string[]
 ): boolean => {
   if (isSuperAdmin()) return true;
+
+  if (item.roles && !hasRole(item.roles)) {
+    return false;
+  }
 
   // Nếu route có permissions, kiểm tra permissions
   if (item.permissions) {
@@ -44,4 +52,14 @@ export const hasPermission = (el: string | string[]) => {
   }
 
   return permissions.includes(el);
+};
+
+export const hasRole = (el: string | string[]) => {
+  const roles = useMeStore.getState().me?.roles ?? [];
+
+  if (Array.isArray(el)) {
+    return el.some((role) => roles.includes(role));
+  }
+
+  return roles.includes(el);
 };

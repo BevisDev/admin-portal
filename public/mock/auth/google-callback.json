@@ -1,0 +1,9 @@
+{
+  "data": {
+    "sub": "109876543210123456789",
+    "name": "Bevis Dev",
+    "email": "bevis.dev@gmail.com",
+    "picture": "https://i.pravatar.cc/300?img=12",
+    "verified_email": true
+  }
+}

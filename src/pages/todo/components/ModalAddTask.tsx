@@ -9,7 +9,7 @@ import {
   message,
 } from "antd";
 import { useTodoQuery, useCreateTaskMutation } from "@/api/todo";
-import { useConstantStore } from "@/store/useConstantStore";
+import { useMasterDataStore } from "@/store/useMasterDataStore";
 import useTheme from "@/hooks/useTheme";
 import type { Task } from "@/types/todo/Board";
 
@@ -24,6 +24,7 @@ interface ModalAddTaskProps {
 interface FormValues {
   title: string;
   description?: string;
+  startDate?: ReturnType<typeof import("dayjs")>;
   dueDate?: ReturnType<typeof import("dayjs")>;
   priority: number;
   columnId: number;
@@ -33,7 +34,7 @@ interface FormValues {
 const ModalAddTask = ({ colId, open, onClose }: ModalAddTaskProps) => {
   const { palette } = useTheme();
   const [form] = Form.useForm<FormValues>();
-  const { data: constants } = useConstantStore();
+  const { data: constants } = useMasterDataStore();
   const { data: todoData } = useTodoQuery();
   const createTaskMutation = useCreateTaskMutation();
 
@@ -48,6 +49,7 @@ const ModalAddTask = ({ colId, open, onClose }: ModalAddTaskProps) => {
       const newTask: Omit<Task, "id"> = {
         title: values.title,
         description: values.description,
+        startDate: values.startDate?.format("YYYY-MM-DD"),
         dueDate: values.dueDate?.format("YYYY-MM-DD"),
         priority: values.priority,
         columnId: values.columnId,
@@ -153,6 +155,13 @@ const ModalAddTask = ({ colId, open, onClose }: ModalAddTaskProps) => {
         </Space.Compact>
 
         <Space.Compact style={{ width: "100%", gap: 16 }} block>
+          <Form.Item name="startDate" label="Start Date" style={{ flex: 1, minWidth: 0 }}>
+            <DatePicker
+              style={{ width: "100%" }}
+              format="YYYY-MM-DD"
+              placeholder="Start date"
+            />
+          </Form.Item>
           <Form.Item name="dueDate" label="Due Date" style={{ flex: 1, minWidth: 0 }}>
             <DatePicker
               style={{ width: "100%" }}

@@ -310,20 +310,6 @@ const ModalTask = ({ task, open, setOpen, onDeleted }: ModalTaskProps) => {
             )}
           </Descriptions>
 
-          {task.assignees && task.assignees.length > 0 && (
-            <div style={{ marginTop: 16 }}>
-              <Text type="secondary" style={{ fontSize: 12, display: "block", marginBottom: 8 }}>
-                Assignees
-              </Text>
-              <Space wrap>
-                {task.assignees.map((a, idx) => (
-                  <Tag key={idx} style={{ borderRadius: 6 }}>
-                    {typeof a === "string" ? a : String(a)}
-                  </Tag>
-                ))}
-              </Space>
-            </div>
-          )}
         </div>
       )}
     </Modal>

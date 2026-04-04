@@ -1,9 +1,10 @@
 import { GETQuery } from "@/hooks/useFetchQuery";
-import type { Response } from "@/types/Response";
+import type { Response } from "@/types/response";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { API } from "..";
 import type { Todo, Task } from "@/types/todo/Board";
 import { mockTodoService, type TodoQueryParams } from "@/utils/mockService";
+import { todoService } from "@/services/todo";
 
 // Use mock service for now (when backend is ready, switch to real API)
 const USE_MOCK = true;
@@ -56,13 +57,7 @@ export const useCreateTaskMutation = () => {
       if (USE_MOCK) {
         return mockTodoService.createTask(taskData);
       }
-
-      // Real API call
-      const { POSTQuery } = await import("@/hooks/useFetchQuery");
-      return POSTQuery<Omit<Task, "id">, Response<Task>>({
-        url: `${API.todo}`,
-        body: taskData,
-      });
+      return todoService.createTask(taskData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["todo"] });
@@ -90,6 +85,35 @@ export const useUpdateTaskMutation = () => {
       return PUTQuery<Partial<Task>, Response<Task>>({
         url: `${API.todo}/${taskId}`,
         body: taskData,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todo"] });
+    },
+  });
+};
+
+export const useUpdateTaskStatusAndColumnMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      taskId,
+      columnId,
+      status,
+    }: {
+      taskId: number;
+      columnId: number;
+      status: string;
+    }) => {
+      if (USE_MOCK) {
+        return mockTodoService.updateTaskStatusAndColumn(taskId, { columnId, status });
+      }
+
+      const { PATCHQuery } = await import("@/hooks/useFetchQuery");
+      return PATCHQuery<{ columnId: number; status: string }, Response<Task>>({
+        url: `${API.todo}/${taskId}/status-column`,
+        body: { columnId, status },
       });
     },
     onSuccess: () => {

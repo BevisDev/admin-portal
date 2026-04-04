@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "name": "Super Admin",
+      "description": "Full system administration access",
+      "usersCount": 1,
+      "permissionsCount": 42,
+      "status": "active"
+    },
+    {
+      "id": "2",
+      "name": "Project Manager",
+      "description": "Manage project tasks and members",
+      "usersCount": 3,
+      "permissionsCount": 18,
+      "status": "active"
+    },
+    {
+      "id": "3",
+      "name": "Viewer",
+      "description": "Read-only access",
+      "usersCount": 12,
+      "permissionsCount": 5,
+      "status": "inactive"
+    }
+  ]
+}

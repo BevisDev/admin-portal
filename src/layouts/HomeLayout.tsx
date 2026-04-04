@@ -1,10 +1,19 @@
-import { Layout } from "antd";
+import { Grid, Layout } from "antd";
 import Sidebar from "./components/Sidebar";
 import MainContent from "./components/MainContent";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const HomeLayout = () => {
-  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const screens = Grid.useBreakpoint();
+  const isMobile = !screens.md;
+
+  const [collapsed, setCollapsed] = useState<boolean>(true);
+
+  useEffect(() => {
+    setCollapsed(isMobile);
+  }, [isMobile]);
+
+  const collapsedWidth = isMobile ? 0 : 80;
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -12,6 +21,7 @@ const HomeLayout = () => {
       <Sidebar
         collapsed={collapsed}
         setCollapsed={() => setCollapsed(!collapsed)}
+        collapsedWidth={collapsedWidth}
       />
 
       {/* Main layout */}

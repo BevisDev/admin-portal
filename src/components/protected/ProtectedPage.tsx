@@ -1,10 +1,11 @@
-import { hasPermission, isAuthenticated, isSuperAdmin } from "@/utils/auth";
+import { hasPermission, hasRole, isAuthenticated, isSuperAdmin } from "@/utils/auth";
 import { Typography } from "antd";
 import { Navigate, useLocation } from "react-router-dom";
 import useTheme from "@/hooks/useTheme";
 import { Routes, type RouteItem } from "@/router/routes";
 
 interface ProtectedPageProps {
+  roles?: string | string[];
   permissions?: string | string[];
   children: React.ReactNode;
 }
@@ -26,7 +27,7 @@ const findRouteLabel = (
   return undefined;
 };
 
-const ProtectedPage = ({ permissions, children }: ProtectedPageProps) => {
+const ProtectedPage = ({ roles, permissions, children }: ProtectedPageProps) => {
   try {
     if (!isAuthenticated()) {
       return <Navigate to="/login" replace />;
@@ -37,18 +38,17 @@ const ProtectedPage = ({ permissions, children }: ProtectedPageProps) => {
       return <PageItem>{children}</PageItem>;
     }
 
-    // Nếu route không có permissions, cho phép truy cập (đã authenticated)
-    if (!permissions) {
-      return <PageItem>{children}</PageItem>;
+    // Role check
+    if (roles && !hasRole(roles)) {
+      return <Navigate to="/404" replace />;
     }
 
-    // Kiểm tra permissions
-    if (hasPermission(permissions)) {
-      return <PageItem>{children}</PageItem>;
+    // Permission check
+    if (permissions && !hasPermission(permissions)) {
+      return <Navigate to="/404" replace />;
     }
 
-    // Không có quyền truy cập
-    return <Navigate to="/404" replace />;
+    return <PageItem>{children}</PageItem>;
   } catch (err) {
     console.error(err);
     return <Navigate to="/500" replace />;

@@ -1,7 +1,8 @@
-import { Layout } from "antd";
+import { Grid, Layout } from "antd";
 import MainHeader from "./MainHeader";
 import { Outlet } from "react-router-dom";
 import useTheme from "@/hooks/useTheme";
+import { useMemo } from "react";
 
 const { Content } = Layout;
 
@@ -12,6 +13,9 @@ interface MainContentProps {
 
 const MainContent = ({ collapsed, setCollapsed }: MainContentProps) => {
   const { palette } = useTheme();
+  const screens = Grid.useBreakpoint();
+  const isMobile = !screens.md;
+  const padding = useMemo(() => (isMobile ? 12 : 24), [isMobile]);
 
   return (
     <Layout>
@@ -21,7 +25,7 @@ const MainContent = ({ collapsed, setCollapsed }: MainContentProps) => {
       {/* Content */}
       <Content
         style={{
-          padding: 24,
+          padding,
           background: palette.background,
           overflow: "auto",
           minHeight: "calc(100vh - 64px)",

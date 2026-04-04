@@ -1,15 +1,15 @@
 import { GETQuery } from "@/hooks/useFetchQuery";
 import { useQuery } from "@tanstack/react-query";
 import { API } from "..";
-import type { Response } from "@/types/Response";
-import type { Constant } from "@/types/constants/constant";
+import type { Response } from "@/types/response";
+import type { MasterData } from "@/types/master_data/model";
 
-export const useConstantsQuery = () => {
+export const useMasterDataQuery = () => {
   return useQuery({
-    queryKey: ["constants"],
+    queryKey: ["master-data"],
     queryFn: () =>
-      GETQuery<null, Response<Constant>>({
-        url: API.constants,
+      GETQuery<null, Response<MasterData>>({
+        url: API.masterData,
       }),
     select: (res) => res.data,
     staleTime: Infinity,

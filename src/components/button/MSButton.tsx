@@ -21,7 +21,13 @@ const MSButton = ({ onClick }: MSButtonProps) => {
       }}
       onClick={onClick}
     >
-      <Image preview={false} src="/logo/ms.svg" alt="Microsoft" />
+      <Image
+        preview={false}
+        src="/logo/ms.svg"
+        alt="Microsoft"
+        width={20}
+        style={{ display: "block" }}
+      />
       Đăng nhập với Microsoft
     </Button>
   );

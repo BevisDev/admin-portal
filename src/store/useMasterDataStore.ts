@@ -1,20 +1,20 @@
-import type { Constant, Priority, Status } from "@/types/constants/constant";
+import type { MasterData, Priority, Status } from "@/types/master_data/model";
 import { create } from "zustand";
 
-interface ConstStore {
-  data: Constant | null;
+interface MasterDataStore {
+  data: MasterData | null;
   priorityMap: Record<string, Priority>;
   statusMap: Record<string, Status>;
-  setData: (data: Constant) => void;
+  setData: (data: MasterData) => void;
 }
 
-export const useConstantStore = create<ConstStore>((set) => ({
+export const useMasterDataStore = create<MasterDataStore>((set) => ({
   data: null,
   priorityMap: {},
   statusMap: {},
   setData: (data) =>
     set({
-      data: data,
+      data,
       priorityMap: Object.fromEntries(data.priorities.map((p) => [p.id, p])),
       statusMap: Object.fromEntries(data.statuses.map((s) => [s.id, s])),
     }),

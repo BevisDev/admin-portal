@@ -1,78 +1,104 @@
 import {
+  Alert,
   Card,
   Col,
+  Flex,
+  List,
   Progress,
   Row,
   Space,
   Statistic,
+  Tag,
   Typography,
 } from "antd";
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
+  ExclamationCircleOutlined,
   FileTextOutlined,
-  TeamOutlined,
   ArrowUpOutlined,
   RiseOutlined,
 } from "@ant-design/icons";
 import useTheme from "@/hooks/useTheme";
 import { Link } from "react-router-dom";
+import { useTodoQuery } from "@/api/todo";
+import dayjs from "dayjs";
+import type { Task } from "@/types/todo/Board";
 
 const { Title, Text } = Typography;
 
-const statCards = [
-  {
-    key: "tasks",
-    title: "Tổng công việc",
-    value: 128,
-    suffix: "task",
-    icon: <FileTextOutlined />,
-    trend: "+12%",
-    color: "#9c6bff",
-    link: "/todo",
-  },
-  {
-    key: "completed",
-    title: "Đã hoàn thành",
-    value: 94,
-    suffix: "task",
-    icon: <CheckCircleOutlined />,
-    trend: "+8%",
-    color: "#52c41a",
-  },
-  {
-    key: "inProgress",
-    title: "Đang thực hiện",
-    value: 24,
-    suffix: "task",
-    icon: <ClockCircleOutlined />,
-    trend: "−3%",
-    color: "#1890ff",
-  },
-  {
-    key: "users",
-    title: "Thành viên",
-    value: 16,
-    suffix: "người",
-    icon: <TeamOutlined />,
-    trend: "+2",
-    color: "#eb2f96",
-    link: "/users",
-  },
-];
-
 const DashBoardPage = () => {
   const { palette } = useTheme();
+  const { data: todoData } = useTodoQuery();
+  const tasks = todoData?.tasks ?? [];
 
   const greeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return "Chào buổi sáng";
-    if (hour < 18) return "Chào buổi chiều";
-    return "Chào buổi tối";
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Good afternoon";
+    return "Good evening";
   };
 
+  const getCompletion = (task: Task) => task.progress ?? 0;
+  const now = dayjs().startOf("day");
+  const completedTasks = tasks.filter((t) => getCompletion(t) >= 100);
+  const inProgressTasks = tasks.filter((t) => getCompletion(t) > 0 && getCompletion(t) < 100);
+  const todoTasks = tasks.filter((t) => getCompletion(t) === 0);
+  const overdueTasks = tasks.filter(
+    (t) => t.dueDate && dayjs(t.dueDate).isBefore(now, "day") && getCompletion(t) < 100
+  );
+  const highPriorityTasks = tasks.filter((t) => t.priority >= 3 && getCompletion(t) < 100);
+
+  const completionRate =
+    tasks.length > 0 ? Math.round((completedTasks.length / tasks.length) * 100) : 0;
+
+  const statCards = [
+    {
+      key: "tasks",
+      title: "Total tasks",
+      value: tasks.length,
+      suffix: "tasks",
+      icon: <FileTextOutlined />,
+      trend: `${todoTasks.length} pending`,
+      color: "#9c6bff",
+      link: "/todo",
+    },
+    {
+      key: "completed",
+      title: "Completed",
+      value: completedTasks.length,
+      suffix: "tasks",
+      icon: <CheckCircleOutlined />,
+      trend: `${completionRate}% done`,
+      color: "#52c41a",
+    },
+    {
+      key: "inProgress",
+      title: "In progress",
+      value: inProgressTasks.length,
+      suffix: "tasks",
+      icon: <ClockCircleOutlined />,
+      trend: `${highPriorityTasks.length} high priority`,
+      color: "#1890ff",
+    },
+    {
+      key: "overdue",
+      title: "Overdue",
+      value: overdueTasks.length,
+      suffix: "tasks",
+      icon: <ExclamationCircleOutlined />,
+      trend: overdueTasks.length > 0 ? "Needs attention" : "All good",
+      color: "#eb2f96",
+    },
+  ];
+
+  const highlightTasks = [...tasks]
+    .filter((t) => t.dueDate && getCompletion(t) < 100)
+    .sort((a, b) => dayjs(a.dueDate).valueOf() - dayjs(b.dueDate).valueOf())
+    .slice(0, 5);
+
   return (
-    <Space direction="vertical" size="large" style={{ width: "100%" }}>
+    <Flex vertical gap="large" style={{ width: "100%" }}>
       {/* Welcome */}
       <div>
         <Title
@@ -87,7 +113,7 @@ const DashBoardPage = () => {
           {greeting()} 👋
         </Title>
         <Text style={{ color: palette.textSecondary, fontSize: 15 }}>
-          Đây là tổng quan hoạt động của bạn hôm nay.
+          Here is your activity overview for today.
         </Text>
       </div>
 
@@ -127,7 +153,7 @@ const DashBoardPage = () => {
                   e.currentTarget.style.boxShadow = "none";
                 }}
               >
-                <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+                <Flex vertical gap="middle" style={{ width: "100%" }}>
                   <div
                     style={{
                       display: "flex",
@@ -155,13 +181,13 @@ const DashBoardPage = () => {
                         strong
                         style={{
                           fontSize: 13,
-                          color: item.trend.startsWith("−")
-                            ? palette.textSecondary
+                          color: item.key === "overdue" && overdueTasks.length > 0
+                            ? "#ff4d4f"
                             : "#52c41a",
                         }}
                       >
                         {item.trend}
-                        {item.trend.includes("%") && item.trend.startsWith("+") && (
+                        {item.trend.includes("%") && (
                           <ArrowUpOutlined style={{ marginLeft: 2, fontSize: 10 }} />
                         )}
                       </Text>
@@ -186,7 +212,7 @@ const DashBoardPage = () => {
                       letterSpacing: "-0.02em",
                     }}
                   />
-                </Space>
+                </Flex>
               </Card>
             </Link>
           </Col>
@@ -202,7 +228,7 @@ const DashBoardPage = () => {
               <Space>
                 <RiseOutlined style={{ color: palette.primary }} />
                 <span style={{ color: palette.text, fontWeight: 600 }}>
-                  Tiến độ công việc
+                  Work progress
                 </span>
               </Space>
             }
@@ -213,7 +239,7 @@ const DashBoardPage = () => {
             }}
             styles={{ body: { padding: "24px" } }}
           >
-            <Space direction="vertical" size="large" style={{ width: "100%" }}>
+            <Flex vertical gap="large" style={{ width: "100%" }}>
               <div>
                 <div
                   style={{
@@ -228,7 +254,7 @@ const DashBoardPage = () => {
                   </Text>
                 </div>
                 <Progress
-                  percent={73}
+                  percent={Math.round((todoTasks.length / Math.max(tasks.length, 1)) * 100)}
                   strokeColor={palette.primary}
                   trailColor={palette.border}
                   strokeWidth={10}
@@ -246,11 +272,11 @@ const DashBoardPage = () => {
                 >
                   <Text style={{ color: palette.textSecondary }}>In progress</Text>
                   <Text strong style={{ color: palette.text }}>
-                    19%
+                    {Math.round((inProgressTasks.length / Math.max(tasks.length, 1)) * 100)}%
                   </Text>
                 </div>
                 <Progress
-                  percent={19}
+                  percent={Math.round((inProgressTasks.length / Math.max(tasks.length, 1)) * 100)}
                   strokeColor="#1890ff"
                   trailColor={palette.border}
                   strokeWidth={10}
@@ -268,18 +294,18 @@ const DashBoardPage = () => {
                 >
                   <Text style={{ color: palette.textSecondary }}>Done</Text>
                   <Text strong style={{ color: palette.text }}>
-                    8%
+                    {completionRate}%
                   </Text>
                 </div>
                 <Progress
-                  percent={8}
+                  percent={completionRate}
                   strokeColor="#52c41a"
                   trailColor={palette.border}
                   strokeWidth={10}
                   showInfo={false}
                 />
               </div>
-            </Space>
+            </Flex>
           </Card>
         </Col>
         <Col xs={24} lg={8}>
@@ -293,7 +319,7 @@ const DashBoardPage = () => {
             }}
             styles={{ body: { padding: "24px" } }}
           >
-            <Space direction="vertical" size="middle">
+            <Flex vertical gap="middle">
               <div
                 style={{
                   width: 48,
@@ -310,12 +336,37 @@ const DashBoardPage = () => {
                 <CheckCircleOutlined />
               </div>
               <Title level={5} style={{ margin: 0, color: palette.text }}>
-                Mẹo nhanh
+                Highlights
               </Title>
-              <Text style={{ color: palette.textSecondary, display: "block" }}>
-                Tạo công việc mới từ trang To-do hoặc kéo thả giữa các cột trên
-                bảng Kanban để cập nhật trạng thái nhanh hơn.
-              </Text>
+              {overdueTasks.length > 0 && (
+                <Alert
+                  type="warning"
+                  showIcon
+                  message={`${overdueTasks.length} overdue task(s) need immediate action`}
+                />
+              )}
+              <List
+                size="small"
+                dataSource={highlightTasks}
+                locale={{ emptyText: "No urgent tasks right now." }}
+                renderItem={(task) => (
+                  <List.Item style={{ paddingInline: 0 }}>
+                    <Flex vertical gap={4} style={{ width: "100%" }}>
+                      <Text strong style={{ color: palette.text }}>
+                        {task.title}
+                      </Text>
+                      <Flex justify="space-between" align="center">
+                        <Text style={{ color: palette.textSecondary, fontSize: 12 }}>
+                          Due {dayjs(task.dueDate).format("DD MMM YYYY")}
+                        </Text>
+                        <Tag color={task.priority >= 3 ? "red" : "blue"}>
+                          P{task.priority}
+                        </Tag>
+                      </Flex>
+                    </Flex>
+                  </List.Item>
+                )}
+              />
               <Link
                 to="/todo"
                 style={{
@@ -324,13 +375,13 @@ const DashBoardPage = () => {
                   fontSize: 14,
                 }}
               >
-                Mở To-do →
+                Open To-do Board →
               </Link>
-            </Space>
+            </Flex>
           </Card>
         </Col>
       </Row>
-    </Space>
+    </Flex>
   );
 };
 

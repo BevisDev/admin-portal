@@ -1,5 +1,5 @@
 import type { Task } from "@/types/todo/Board";
-import { Avatar, Progress, Table, Tag } from "antd";
+import { Progress, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { formatDate } from "@/utils/date";
 import TagPriority from "./TagPriority";
@@ -119,6 +119,19 @@ const TableView = ({ tasks }: TableViewProps) => {
       sorter: (a, b) => (a.progress ?? 0) - (b.progress ?? 0),
     },
     {
+      title: "Start Date",
+      dataIndex: "startDate",
+      key: "startDate",
+      width: 140,
+      render: (date: string | undefined) =>
+        date ? formatDate(date, "DD MMM YYYY") : "-",
+      sorter: (a, b) => {
+        if (!a.startDate) return 1;
+        if (!b.startDate) return -1;
+        return dayjs(a.startDate).unix() - dayjs(b.startDate).unix();
+      },
+    },
+    {
       title: "Due Date",
       dataIndex: "dueDate",
       key: "dueDate",
@@ -130,56 +143,6 @@ const TableView = ({ tasks }: TableViewProps) => {
         if (!b.dueDate) return -1;
         return dayjs(a.dueDate).unix() - dayjs(b.dueDate).unix();
       },
-    },
-    {
-      title: "Assignees",
-      dataIndex: "assignees",
-      key: "assignees",
-      width: 120,
-      render: (assignees: string[] | undefined) => {
-        if (!assignees || assignees.length === 0) return "-";
-        return (
-          <Avatar.Group maxCount={3} size="small">
-            {assignees.slice(0, 3).map((assignee, idx) => (
-              <Avatar
-                key={idx}
-                size="small"
-                style={{
-                  backgroundColor: [
-                    "#00B894",
-                    "#6C5CE7",
-                    "#0984E3",
-                    "#FDCB6E",
-                    "#E17055",
-                  ][idx % 5],
-                }}
-              >
-                {typeof assignee === "string"
-                  ? assignee.slice(0, 2).toUpperCase()
-                  : String(assignee).slice(0, 2)}
-              </Avatar>
-            ))}
-          </Avatar.Group>
-        );
-      },
-    },
-    {
-      title: "Views",
-      dataIndex: "views",
-      key: "views",
-      width: 80,
-      align: "center",
-      render: (views: number | undefined) => views ?? 0,
-      sorter: (a, b) => (a.views ?? 0) - (b.views ?? 0),
-    },
-    {
-      title: "Comments",
-      dataIndex: "comments",
-      key: "comments",
-      width: 100,
-      align: "center",
-      render: (comments: number | undefined) => comments ?? 0,
-      sorter: (a, b) => (a.comments ?? 0) - (b.comments ?? 0),
     },
   ];
 
@@ -194,7 +157,7 @@ const TableView = ({ tasks }: TableViewProps) => {
           showSizeChanger: true,
           showTotal: (total) => `Total ${total} tasks`,
         }}
-        scroll={{ x: 1200 }}
+        scroll={{ x: 1040 }}
         onRow={(record) => ({
           onClick: () => handleRowClick(record),
           style: { cursor: "pointer" },

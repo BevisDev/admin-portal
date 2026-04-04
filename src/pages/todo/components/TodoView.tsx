@@ -1,6 +1,5 @@
 import type { Task } from "@/types/todo/Board";
 import {
-  Avatar,
   Card,
   Checkbox,
   Flex,
@@ -130,9 +129,9 @@ const TodoView = ({ tasks, filterDateRange }: TodoViewProps) => {
       filterDateRange[0] !== null &&
       filterDateRange[1] !== null
     ) {
-      displayText = `từ ${filterDateRange[0].format("DD/MM/YYYY")} đến ${filterDateRange[1].format("DD/MM/YYYY")}`;
+      displayText = `from ${filterDateRange[0].format("DD/MM/YYYY")} to ${filterDateRange[1].format("DD/MM/YYYY")}`;
     } else {
-      displayText = `hôm nay (${dayjs().format("DD/MM/YYYY")})`;
+      displayText = `today (${dayjs().format("DD/MM/YYYY")})`;
     }
     return (
       <div
@@ -143,7 +142,7 @@ const TodoView = ({ tasks, filterDateRange }: TodoViewProps) => {
         }}
       >
         <Typography.Text style={{ fontSize: 16 }}>
-          Không có task nào có due date {displayText}
+          No tasks with due date {displayText}
         </Typography.Text>
       </div>
     );
@@ -291,37 +290,6 @@ const TodoView = ({ tasks, filterDateRange }: TodoViewProps) => {
                 </Space>
               </Flex>
 
-              {/* Assignees */}
-              {task.assignees && task.assignees.length > 0 && (
-                <div style={{ marginTop: 12 }}>
-                  <Avatar.Group
-                    maxCount={3}
-                    maxStyle={{
-                      color: palette.text,
-                      backgroundColor: palette.border,
-                    }}
-                  >
-                    {task.assignees.slice(0, 3).map((assignee, idx) => (
-                      <Avatar
-                        key={idx}
-                        style={{
-                          backgroundColor: [
-                            "#00B894",
-                            "#6C5CE7",
-                            "#0984E3",
-                            "#FDCB6E",
-                            "#E17055",
-                          ][idx % 5],
-                        }}
-                      >
-                        {typeof assignee === "string"
-                          ? assignee.slice(0, 2).toUpperCase()
-                          : String(assignee).slice(0, 2)}
-                      </Avatar>
-                    ))}
-                  </Avatar.Group>
-                </div>
-              )}
             </Card>
           );
         })}

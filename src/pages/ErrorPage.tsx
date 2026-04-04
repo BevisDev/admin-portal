@@ -3,8 +3,8 @@ import type { ExceptionStatusType } from "antd/es/result";
 
 const ErrorPage = (
   status: ExceptionStatusType = 500,
-  title: string = "Hệ thống lỗi",
-  subTitle: string = "Vui lòng thử lại sau ít phút"
+  title: string = "System error",
+  subTitle: string = "Please try again in a few minutes"
 ) => {
   return (
     <div

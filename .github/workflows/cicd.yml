@@ -1,0 +1,30 @@
+name: Admin Portal CI/CD
+
+on:
+  push:
+    branches: ["master"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  trigger-cicd-repo:
+    name: Trigger external CI/CD repository
+    runs-on: ubuntu-latest
+    if: >
+      github.ref == 'refs/heads/master' &&
+      vars.CICD_REPO != '' &&
+      secrets.CICD_REPO_TOKEN != ''
+    steps:
+      - name: Dispatch event to CI/CD repo
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.CICD_REPO_TOKEN }}
+          repository: ${{ vars.CICD_REPO }}
+          event-type: admin-portal-deploy
+          client-payload: >
+            {"source_repo":"${{ github.repository }}",
+             "ref":"${{ github.ref_name }}",
+             "sha":"${{ github.sha }}",
+             "actor":"${{ github.actor }}"}
