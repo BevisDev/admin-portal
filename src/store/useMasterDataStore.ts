@@ -1,4 +1,4 @@
-import type { MasterData, Priority, Status } from "@/types/master_data/model";
+import type { MasterData, Priority, Status } from "@/models/master_data/model";
 import { create } from "zustand";
 
 interface MasterDataStore {

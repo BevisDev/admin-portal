@@ -1,8 +1,8 @@
 import { GETQuery } from "@/hooks/useFetchQuery";
-import type { Response } from "@/types/response";
+import type { Response } from "@/models/response";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { API } from "..";
-import type { Todo, Task } from "@/types/todo/Board";
+import type { Todo, Task } from "@/models/todo/Board";
 import { mockTodoService, type TodoQueryParams } from "@/utils/mockService";
 import { todoService } from "@/services/todo";
 

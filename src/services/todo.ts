@@ -1,7 +1,7 @@
 import { API } from "@/api";
 import { POSTQuery } from "@/hooks/useFetchQuery";
-import type { Response } from "@/types/response";
-import type { Task } from "@/types/todo/Board";
+import type { Response } from "@/models/response";
+import type { Task } from "@/models/todo/Board";
 
 export const todoService = {
   // Ready for backend create task API

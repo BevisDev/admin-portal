@@ -11,7 +11,7 @@ import {
 import { useTodoQuery, useCreateTaskMutation } from "@/api/todo";
 import { useMasterDataStore } from "@/store/useMasterDataStore";
 import useTheme from "@/hooks/useTheme";
-import type { Task } from "@/types/todo/Board";
+import type { Task } from "@/models/todo/Board";
 
 const { TextArea } = Input;
 

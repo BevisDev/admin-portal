@@ -1,4 +1,4 @@
-import type { Task } from "@/types/todo/Board";
+import type { Task } from "@/models/todo/Board";
 import { CalendarOutlined } from "@ant-design/icons";
 import { Card, Flex, Space } from "antd";
 import TagPriority from "./TagPriority";

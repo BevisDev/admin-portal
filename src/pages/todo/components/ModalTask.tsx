@@ -1,4 +1,4 @@
-import type { Task } from "@/types/todo/Board";
+import type { Task } from "@/models/todo/Board";
 import {
   Button,
   DatePicker,

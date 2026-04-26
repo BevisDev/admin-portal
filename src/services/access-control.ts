@@ -1,6 +1,6 @@
 import { GETQuery, POSTQuery } from "@/hooks/useFetchQuery";
-import type { Response } from "@/types/response";
-import type { User } from "@/types/user/User";
+import type { Response } from "@/models/response";
+import type { User } from "@/models/user/User";
 import { API } from "@/api";
 
 export interface RoleItem {

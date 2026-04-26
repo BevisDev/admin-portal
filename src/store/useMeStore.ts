@@ -1,4 +1,4 @@
-import type { Me } from "@/types/auth/Me";
+import type { Me } from "@/models/auth/me";
 import { create } from "zustand";
 
 interface MeStore {

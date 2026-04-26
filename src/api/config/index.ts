@@ -1,6 +1,6 @@
 import type { AppConfig } from "@/config/AppConfig";
 import { GETQuery } from "@/hooks/useFetchQuery";
-import type { Response } from "@/types/response";
+import type { Response } from "@/models/response";
 import { useQuery } from "@tanstack/react-query";
 import { API } from "..";
 

@@ -1,4 +1,4 @@
-import type { Task } from "@/types/todo/Board";
+import type { Task } from "@/models/todo/Board";
 import { Progress, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { formatDate } from "@/utils/date";

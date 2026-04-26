@@ -1,4 +1,4 @@
-import type { Column, Task } from "@/types/todo/Board";
+import type { Column, Task } from "@/models/todo/Board";
 import ColumnCard from "./ColumnCard";
 import { useCallback, useMemo, useState } from "react";
 import {

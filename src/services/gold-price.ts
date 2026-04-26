@@ -1,6 +1,6 @@
 import { API } from "@/api";
 import { GETQuery } from "@/hooks/useFetchQuery";
-import type { Response } from "@/types/response";
+import type { Response } from "@/models/response";
 
 export interface GoldPriceItem {
   typeCode: string;

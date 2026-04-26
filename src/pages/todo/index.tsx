@@ -19,7 +19,7 @@ import {
 import TodoView from "./components/TodoView";
 import TableView from "./components/TableView";
 import { useEffect, useState } from "react";
-import type { Column } from "@/types/todo/Board";
+import type { Column } from "@/models/todo/Board";
 import { useTodoQuery } from "@/api/todo";
 import { useNavigate } from "react-router-dom";
 import useTheme from "@/hooks/useTheme";

@@ -1,5 +1,5 @@
-import type { Task, Todo } from "@/types/todo/Board";
-import type { Response } from "@/types/response";
+import type { Task, Todo } from "@/models/todo/Board";
+import type { Response } from "@/models/response";
 import dayjs from "dayjs";
 
 // In-memory storage for mock data

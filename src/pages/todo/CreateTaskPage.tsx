@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useMasterDataStore } from "@/store/useMasterDataStore";
 import useTheme from "@/hooks/useTheme";
 import dayjs from "dayjs";
-import type { Task } from "@/types/todo/Board";
+import type { Task } from "@/models/todo/Board";
 import { useTodoQuery, useCreateTaskMutation } from "@/api/todo";
 
 const { Title } = Typography;

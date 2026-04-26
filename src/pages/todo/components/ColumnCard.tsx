@@ -1,4 +1,4 @@
-import type { Column, Task } from "@/types/todo/Board";
+import type { Column, Task } from "@/models/todo/Board";
 import { PlusOutlined } from "@ant-design/icons";
 import { Card, Tooltip } from "antd";
 import TaskCard from "./TaskCard";

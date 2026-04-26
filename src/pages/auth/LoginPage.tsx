@@ -1,45 +1,63 @@
-import GoogleButton from "@/components/button/GoogleButton";
 import { useMeStore } from "@/store/useMeStore";
 import { useCheckAccountMutation } from "@/api/auth";
-import { ArrowRightOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import { gsap } from "gsap";
 import {
-  Button,
-  Card,
-  Divider,
-  Input,
-  Typography,
-  message,
-} from "antd";
+  ArrowRightOutlined,
+  CheckOutlined,
+  CloseOutlined,
+} from "@ant-design/icons";
+import { gsap } from "gsap";
+import { Button, Card, Divider, Input, Typography, message } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import bgLogin from "@/assets/background/bg-login.jpg";
-import { login } from "@/services/auth/google";
+import {
+  checkExistsUsername,
+  login,
+  type LoginProvider,
+} from "@/services/auth/login";
+import LoginProviders from "./LoginProviders";
 
 const { Title } = Typography;
 interface LoginLocationState {
   from?: string;
 }
-type CheckState = "idle" | "loading" | "ok" | "exists" | "error";
+type State = "idle" | "loading" | "ok" | "exists" | "error";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location.state as LoginLocationState | null;
-  const from = typeof locationState?.from === "string" ? locationState.from : "/";
+  const from =
+    typeof locationState?.from === "string" ? locationState.from : "/";
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [checkState, setCheckState] = useState<CheckState>("idle");
+  const [state, setState] = useState<State>("idle");
   const passwordWrapRef = useRef<HTMLDivElement | null>(null);
   const checkAccountMutation = useCheckAccountMutation();
   const { me, setMe } = useMeStore((s) => s);
 
-  const handleGoogleLogin = () => {
-    const res = login({ from, me, setMe, navigate });
-    if (res.mode === "error" && res.error) {
+  const handleLogin = (provider: LoginProvider) => {
+    const res = login({
+      from,
+      provider,
+      me,
+      setMe,
+      navigate,
+    });
+    if (res.error) {
       message.error(res.error);
     }
+    if (!res.me) {
+      message.error("không tìm thấy user");
+      return;
+    }
+
+    setMe({
+      ...res.me,
+      isAuthenticated: true,
+    });
+    void navigate(from, { replace: true });
   };
 
   useEffect(() => {
@@ -58,52 +76,29 @@ const LoginPage = () => {
         height: "auto",
         duration: 0.32,
         ease: "power2.out",
-      }
+      },
     );
   }, [showPassword]);
 
-  const handleNext = async () => {
-    if (!username.trim()) {
-      message.error("Vui lòng nhập username.");
-      return;
-    }
-
-    try {
-      setCheckState("loading");
-      const isAccountExist = await checkAccountMutation.mutateAsync({
-        username,
-      });
-
-      // Theo yêu cầu: nếu account đã tồn tại thì báo lỗi và không cho đi tiếp
-      if (isAccountExist) {
-        setCheckState("exists");
-        setShowPassword(false);
-        setPassword("");
-        return;
-      }
-
-      setPassword("");
-      setCheckState("ok");
-      setShowPassword(true);
-    } catch {
-      setCheckState("error");
+  const handleExistsUsername = () => {
+    setState("loading");
+    const res = checkExistsUsername(username);
+    if (res.error) {
+      setState("error");
       setShowPassword(false);
       setPassword("");
     }
-  };
 
-  const handleLogin = () => {
-    if (!me) return;
-    if (!password.trim()) {
-      message.error("Vui lòng nhập mật khẩu.");
+    if (res.exists) {
+      setState("exists");
+      setShowPassword(false);
+      setPassword("");
       return;
     }
 
-    setMe({
-      ...me,
-      isAuthenticated: true,
-    });
-    void navigate(from, { replace: true });
+    setPassword("");
+    setState("ok");
+    setShowPassword(true);
   };
 
   return (
@@ -143,19 +138,15 @@ const LoginPage = () => {
             placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            onPressEnter={() => {
-              void handleNext();
-            }}
+            onPressEnter={handleExistsUsername}
             suffix={
-              checkState === "idle" ? (
+              state === "idle" ? (
                 <Button
                   type="text"
                   shape="circle"
                   aria-label="Next"
                   icon={<ArrowRightOutlined style={{ color: "#fff" }} />}
-                  onClick={() => {
-                    void handleNext();
-                  }}
+                  onClick={handleExistsUsername}
                   style={{
                     background: "#111",
                     width: 28,
@@ -163,7 +154,7 @@ const LoginPage = () => {
                     minWidth: 28,
                   }}
                 />
-              ) : checkState === "loading" ? (
+              ) : state === "loading" ? (
                 <Button
                   type="text"
                   shape="circle"
@@ -178,7 +169,7 @@ const LoginPage = () => {
                     minWidth: 28,
                   }}
                 />
-              ) : checkState === "ok" ? (
+              ) : state === "ok" ? (
                 <CheckOutlined style={{ color: "#18a058", fontSize: 18 }} />
               ) : (
                 <CloseOutlined style={{ color: "#ff4d4f", fontSize: 18 }} />
@@ -205,9 +196,17 @@ const LoginPage = () => {
                 placeholder="Mật khẩu"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                onPressEnter={handleLogin}
+                onPressEnter={() => {
+                  void handleLogin("password");
+                }}
               />
-              <Button type="primary" size="large" onClick={handleLogin}>
+              <Button
+                type="primary"
+                size="large"
+                onClick={() => {
+                  void handleLogin;
+                }}
+              >
                 Đăng nhập
               </Button>
             </div>
@@ -217,7 +216,8 @@ const LoginPage = () => {
             or
           </Divider>
 
-          <GoogleButton onClick={handleGoogleLogin} />
+          {/* Login with */}
+          <LoginProviders />
         </div>
       </Card>
     </div>

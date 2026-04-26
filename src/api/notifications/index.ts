@@ -1,7 +1,7 @@
 import { GETQuery } from "@/hooks/useFetchQuery";
 import { useQuery } from "@tanstack/react-query";
 import { API } from "..";
-import type { Response } from "@/types/response";
+import type { Response } from "@/models/response";
 
 export interface NotificationItem {
   id: string;

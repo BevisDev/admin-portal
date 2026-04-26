@@ -1,8 +1,8 @@
 import { GETQuery } from "@/hooks/useFetchQuery";
 import { useQuery } from "@tanstack/react-query";
 import { API } from "..";
-import type { Response } from "@/types/response";
-import type { MasterData } from "@/types/master_data/model";
+import type { Response } from "@/models/response";
+import type { MasterData } from "@/models/master_data/model";
 
 export const useMasterDataQuery = () => {
   return useQuery({

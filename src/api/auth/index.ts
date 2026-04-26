@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import type { Me } from "@/types/auth/Me";
+import type { Me } from "@/models/auth/me";
 import { GETQuery } from "@/hooks/useFetchQuery";
-import type { Response } from "@/types/response";
+import type { Response } from "@/models/response";
 import { API } from "@/api";
 import { useMutation } from "@tanstack/react-query";
 
