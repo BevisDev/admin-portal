@@ -37,8 +37,7 @@ export const checkExistsUsername = (
 
   try {
     return {
-      exists: true,
-      error: "Vui lòng nhập username.",
+      exists: false,
     };
   } catch {
     return {
@@ -58,7 +57,7 @@ export const login = (r: LoginRequest): LoginResponse => {
         };
       }
       return {
-        me: null,
+        me: r.me,
       };
     }
 

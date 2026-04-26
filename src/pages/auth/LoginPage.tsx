@@ -47,6 +47,7 @@ const LoginPage = () => {
     });
     if (res.error) {
       message.error(res.error);
+      return;
     }
     if (!res.me) {
       message.error("không tìm thấy user");
